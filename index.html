@@ -36,19 +36,13 @@
         box-shadow: 0 10px 15px -3px rgba(253, 224, 71, 0.5),
           0 4px 6px -2px rgba(253, 224, 71, 0.2);
       }
-
+      
       /* ------------------------------------------------------------------ */
-      /* NEW: Animation Breathing cho ảnh Voucher */
+      /* Animation Breathing cho ảnh Voucher */
       @keyframes breathing {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.02);
-        }
-        100% {
-          transform: scale(1);
-        }
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
       }
       .voucher-breathing {
         animation: breathing 4s ease-in-out infinite;
@@ -241,8 +235,16 @@
         width: 100%;
         height: auto;
         max-width: 100%;
-        /* NEW: Áp dụng animation thở */
+        /* Áp dụng animation thở */
         transform: translateZ(0); /* Kích hoạt hardware acceleration */
+      }
+      .social-icon-img {
+          width: 40px; 
+          height: 40px; 
+          transition: transform 0.3s;
+      }
+      .social-icon-img:hover {
+          transform: scale(1.25);
       }
     </style>
   </head>
@@ -410,9 +412,7 @@
         </header>
 
         <!-- Thẻ Voucher Chính (Đã thay bằng hình ảnh PNG) -->
-        <div
-          class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden voucher-breathing"
-        >
+        <div class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden voucher-breathing">
           <img
             src="images/voucher.png"
             alt="Voucher Mua 1 Tặng 1 từ Lemon Patisserie"
@@ -496,58 +496,46 @@
             <a
               href="https://www.facebook.com/share/1CrsC73tKX/"
               target="_blank"
-              class="text-blue-600 hover:text-blue-800 transition transform hover:scale-125"
+              class="transition transform hover:scale-125"
               aria-label="Facebook"
             >
-              <!-- SVG for Facebook -->
-              <svg
-                class="w-10 h-10"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="images/fbicon.webp"
-              >
-                <path
-                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-3 7h-2c-.407 0-.693.308-.693.693v1.307h2.693l-.358 2h-2.335v7h-3v-7h-2v-2h2v-1.543c0-1.242.664-2.457 2.45-2.457h2.55v.001z"
-                />
-              </svg>
+              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
+              <img
+                src="images/fbicon.webp" 
+                alt="Facebook Icon"
+                class="social-icon-img"
+                onerror="this.onerror=null; this.src='https://placehold.co/40x40/3B5998/FFFFFF?text=FB';"
+              />
             </a>
             <!-- Instagram Icon -->
             <a
               href="https://www.instagram.com/lemonpatisserie.vn?igsh=cWQyemJndGdzd3hq"
               target="_blank"
-              class="text-pink-600 hover:text-pink-800 transition transform hover:scale-125"
+              class="transition transform hover:scale-125"
               aria-label="Instagram"
             >
-              <!-- SVG for Instagram -->
-              <svg
-                class="w-10 h-10"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="images/Instagram_icon.png"
-              >
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07c3.27.155 4.706 1.761 4.887 4.887.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.155 3.27-1.761 4.706-4.887 4.887-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-3.27-.155-4.706-1.761-4.887-4.887-.058-1.266-.07-1.646-.07-4.85s.012-3.535.069-4.793c.131-2.724 1.07-3.791 3.794-3.922 1.258-.057 1.652-.069 4.793-.069s3.535-.012 4.793-.069c2.724-.131 3.791-1.07 3.922-3.794.057-1.258.069-1.652.069-4.793s-.012-3.535-.069-4.793c-.131-2.724-1.07-3.791-3.794-3.922-1.258-.057-1.652-.069-4.793-.069zm0 3.627a4.108 4.108 0 1 0 0 8.216 4.108 4.108 0 0 0 0-8.216zm0 2.163a1.945 1.945 0 1 1 0 3.89 1.945 1.945 0 0 1 0-3.89zm6.611-3.834a.972.972 0 1 0 0 1.944.972.972 0 0 0 0-1.944z"
-                />
-              </svg>
+              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
+              <img
+                src="images/Instagram_icon.png"
+                alt="Instagram Icon"
+                class="social-icon-img"
+                onerror="this.onerror=null; this.src='https://placehold.co/40x40/E1306C/FFFFFF?text=IG';"
+              />
             </a>
             <!-- TikTok Icon -->
             <a
               href="https://www.tiktok.com/@lemonpatisserie.vn?_t=ZS-90WBJuYfmTf&_r=1"
               target="_blank"
-              class="text-gray-900 hover:text-gray-700 transition transform hover:scale-125"
+              class="transition transform hover:scale-125"
               aria-label="TikTok"
             >
-              <!-- SVG for TikTok -->
-              <svg
-                class="w-10 h-10"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="images/tiktokicon.png"
-              >
-                <path
-                  d="M12.396 0V11.892c-.8-.22-1.72-.338-2.748-.338-4.254 0-7.75 3.52-7.75 7.753s3.496 7.753 7.75 7.753c1.028 0 1.948-.118 2.748-.338V12.396l5.772-5.772v5.772l-5.772 5.772v11.545c-6.386 0-11.545-5.159-11.545-11.545S6.009 0 12.396 0z"
-                />
-              </svg>
+              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
+              <img
+                src="images/tiktokicon.png"
+                alt="TikTok Icon"
+                class="social-icon-img"
+                onerror="this.onerror=null; this.src='https://placehold.co/40x40/000000/FFFFFF?text=TK';"
+              />
             </a>
           </div>
         </section>
