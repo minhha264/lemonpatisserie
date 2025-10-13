@@ -36,13 +36,19 @@
         box-shadow: 0 10px 15px -3px rgba(253, 224, 71, 0.5),
           0 4px 6px -2px rgba(253, 224, 71, 0.2);
       }
-      
+
       /* ------------------------------------------------------------------ */
       /* Animation Breathing cho ảnh Voucher */
       @keyframes breathing {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-        100% { transform: scale(1); }
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
       }
       .voucher-breathing {
         animation: breathing 4s ease-in-out infinite;
@@ -239,12 +245,12 @@
         transform: translateZ(0); /* Kích hoạt hardware acceleration */
       }
       .social-icon-img {
-          width: 40px; 
-          height: 40px; 
-          transition: transform 0.3s;
+        width: 40px;
+        height: 40px;
+        transition: transform 0.3s;
       }
       .social-icon-img:hover {
-          transform: scale(1.25);
+        transform: scale(1.25);
       }
     </style>
   </head>
@@ -412,7 +418,9 @@
         </header>
 
         <!-- Thẻ Voucher Chính (Đã thay bằng hình ảnh PNG) -->
-        <div class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden voucher-breathing">
+        <div
+          class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden voucher-breathing"
+        >
           <img
             src="images/voucher.png"
             alt="Voucher Mua 1 Tặng 1 từ Lemon Patisserie"
@@ -470,11 +478,14 @@
 
         <!-- CTA & Hình ảnh -->
         <div class="text-center mt-6">
-          <button
-            class="cta-button lemon-bg text-gray-900 font-bold py-3 px-6 rounded-full text-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105"
+          <!-- ĐÃ SỬA: Thay button bằng thẻ <a> và đổi nội dung thành "ĐẶT BÁNH NGAY" -->
+          <a
+            href="order.html"
+            class="cta-button lemon-bg text-gray-900 font-bold py-3 px-6 rounded-full text-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105 inline-block"
+            style="text-decoration: none"
           >
-            Lemon Patisserie
-          </button>
+            ĐẶT BÁNH NGAY
+          </a>
           <div class="mt-4">
             <!-- Placeholder cho hình ảnh design của chương trình -->
             <img
@@ -501,7 +512,7 @@
             >
               <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
               <img
-                src="images/fbicon.webp" 
+                src="images/fbicon.webp"
                 alt="Facebook Icon"
                 class="social-icon-img"
                 onerror="this.onerror=null; this.src='https://placehold.co/40x40/3B5998/FFFFFF?text=FB';"
