@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lemon Patisserie - Voucher Mua 1 Tặng 1</title>
+    <!-- Tải Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải Font Montserrat Bold -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Thiết lập font chữ Montserrat Bold mặc định và background */
+      body {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700; /* Đảm bảo font bold được sử dụng */
+        background-color: #fef9e7; /* Màu kem nhạt */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 20px 10px;
+        overflow-x: hidden; /* Ngăn chặn cuộn ngang do animation nền */
+      }
+      /* Custom Tailwind config (sử dụng màu chanh đặc trưng) */
+      .lemon-bg {
+        background-color: #fde047; /* Màu vàng chanh/Amber 400 */
+      }
+      .lemon-text {
+        color: #d97706; /* Màu cam đậm/Amber 700 */
+      }
+      .shadow-lemon {
+        box-shadow: 0 10px 15px -3px rgba(253, 224, 71, 0.5),
+          0 4px 6px -2px rgba(253, 224, 71, 0.2);
+      }
+      /* Hiệu ứng nhấp nháy cho CTA (trước và sau khi mở) */
+      @keyframes pulse-shadow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(253, 224, 71, 0);
+        }
+      }
+      .cta-button {
+        animation: pulse-shadow 2s infinite;
+      }
+
+      /* ----- Styles cho hiệu ứng mở quà ----- */
+      #reveal-cover {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fef9e7;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        padding: 20px; /* Tối ưu padding cho di động */
+      }
+
+      #reveal-cover.is-revealed {
+        opacity: 0;
+        transform: scale(1.1);
+        pointer-events: none;
+      }
+
+      #voucher-container {
+        /* Nội dung chính được ẩn ban đầu và sẽ được hiển thị bằng JS */
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-in-out 0.5s,
+          transform 0.8s ease-in-out 0.5s;
+      }
+
+      #voucher-container.is-active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .gift-box {
+        background-color: #ffffff;
+        border: 4px solid #fde047;
+        padding: 30px 20px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 380px;
+      }
+
+      .open-button {
+        background-color: #d97706; /* Màu cam đậm */
+        color: white;
+        padding: 12px 24px;
+        font-size: 1.125rem;
+        font-weight: bold;
+        border-radius: 9999px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s;
+      }
+
+      /* ----- BACKGROUND ANIMATION (MƯA BÁNH NGỌT) ----- */
+      .animated-item {
+        position: absolute;
+        opacity: 0;
+        animation: fall-and-spin linear infinite;
+        z-index: 0;
+        user-select: none; /* Ngăn chọn văn bản */
+        pointer-events: none; /* Ngăn chặn tương tác chuột */
+      }
+
+      @keyframes fall-and-spin {
+        0% {
+          transform: translateY(-10vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.6;
+        } /* Làm mờ hơn để trông giống mưa chậm */
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(110vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Cấu hình vị trí và thời gian rơi (làm chậm và kéo dài) cho 16 items */
+      .animated-item:nth-child(1) {
+        left: 10%;
+        animation-duration: 35s;
+        animation-delay: 0s;
+      }
+      .animated-item:nth-child(2) {
+        left: 30%;
+        animation-duration: 40s;
+        animation-delay: 5s;
+      }
+      .animated-item:nth-child(3) {
+        left: 50%;
+        animation-duration: 30s;
+        animation-delay: 10s;
+      }
+      .animated-item:nth-child(4) {
+        left: 70%;
+        animation-duration: 45s;
+        animation-delay: 15s;
+      }
+      .animated-item:nth-child(5) {
+        left: 90%;
+        animation-duration: 38s;
+        animation-delay: 20s;
+      }
+      .animated-item:nth-child(6) {
+        left: 5%;
+        animation-duration: 42s;
+        animation-delay: 25s;
+      }
+      .animated-item:nth-child(7) {
+        left: 85%;
+        animation-duration: 36s;
+        animation-delay: 30s;
+      }
+      .animated-item:nth-child(8) {
+        left: 45%;
+        animation-duration: 48s;
+        animation-delay: 35s;
+      }
+      .animated-item:nth-child(9) {
+        left: 20%;
+        animation-duration: 32s;
+        animation-delay: 2s;
+      }
+      .animated-item:nth-child(10) {
+        left: 40%;
+        animation-duration: 41s;
+        animation-delay: 7s;
+      }
+      .animated-item:nth-child(11) {
+        left: 60%;
+        animation-duration: 34s;
+        animation-delay: 12s;
+      }
+      .animated-item:nth-child(12) {
+        left: 80%;
+        animation-duration: 46s;
+        animation-delay: 17s;
+      }
+      .animated-item:nth-child(13) {
+        left: 15%;
+        animation-duration: 39s;
+        animation-delay: 22s;
+      }
+      .animated-item:nth-child(14) {
+        left: 25%;
+        animation-duration: 43s;
+        animation-delay: 27s;
+      }
+      .animated-item:nth-child(15) {
+        left: 55%;
+        animation-duration: 37s;
+        animation-delay: 32s;
+      }
+      .animated-item:nth-child(16) {
+        left: 75%;
+        animation-duration: 44s;
+        animation-delay: 37s;
+      }
+
+      .responsive-voucher-image {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- BACKGROUND ANIMATION: MƯA BÁNH NGỌT (16 icons) -->
+    <!-- Sử dụng placeholder hình ảnh "images/icon.png" như bạn yêu cầu -->
+    <!-- 1-8 (Kích thước lớn hơn) -->
+    <img
+      class="animated-item"
+      style="width: 65px; height: 65px"
+      src="images/8.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 55px; height: 55px"
+      src="images/icon1.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 70px; height: 70px"
+      src="images/icon2.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 60px; height: 60px"
+      src="images/3.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 75px; height: 75px"
+      src="images/4.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 62px; height: 62px"
+      src="images/5.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 68px; height: 68px"
+      src="images/6.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 58px; height: 58px"
+      src="images/7.png"
+      alt="Bánh ngọt rơi"
+    />
+
+    <!-- 9-16 (Bổ sung thêm 8 icon, kích thước lớn hơn và đường dẫn placeholder mới) -->
+    <img
+      class="animated-item"
+      style="width: 65px; height: 65px"
+      src="images/8.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 55px; height: 55px"
+      src="images/icon1.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 70px; height: 70px"
+      src="images/icon2.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 60px; height: 60px"
+      src="images/3.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 75px; height: 75px"
+      src="images/4.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 62px; height: 62px"
+      src="images/5.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 68px; height: 68px"
+      src="images/6.png"
+      alt="Bánh ngọt rơi"
+    />
+    <img
+      class="animated-item"
+      style="width: 58px; height: 58px"
+      src="images/7.png"
+      alt="Bánh ngọt rơi"
+    />
+
+    <!-- PHẦN 1: MÀN HÌNH MỞ QUÀ (REVEAL COVER) -->
+    <div id="reveal-cover">
+      <div class="gift-box w-11/12 max-w-sm">
+        <!-- Thay icon hộp quà bằng hình ảnh PNG -->
+        <img
+          src="images/LOGO PNG.png"
+          alt="Bạn có một món quà"
+          class="w-full h-auto mb-4"
+          onerror="this.onerror=null; this.src='https://placehold.co/300x150/fef9e7/d97706?text=BẠN+CÓ+MỘT+MÓN+QUÀ';"
+        />
+
+        <p class="text-gray-600 mt-2 text-sm">
+          Nhấn vào nút bên dưới để mở thư mời và khám phá ưu đãi đặc biệt từ
+          Lemon Patisserie.
+        </p>
+        <button id="open-gift-btn" class="open-button cta-button mt-8">
+          BẤM ĐỂ MỞ NGAY
+        </button>
+      </div>
+    </div>
+
+    <!-- PHẦN 2: NỘI DUNG CHÍNH (VOUCHER CONTAINER) -->
+    <!-- Khối chứa nội dung chính, giới hạn kích thước cho trải nghiệm di động tốt -->
+    <div
+      id="voucher-container"
+      class="w-full max-w-md bg-white p-6 md:p-8 rounded-2xl shadow-2xl border-4 border-yellow-300 relative z-10"
+    >
+      <!-- Tiêu đề Tiệm Bánh với Logo -->
+      <header class="text-center mb-6">
+        <!-- LOGO -->
+        <img
+          src="/images/LOGO PNG.png"
+          alt="Logo Lemon Patisserie"
+          class="w-48 mx-auto h-auto mb-3"
+          onerror="this.onerror=null; this.style.display='none'; document.getElementById('text-logo').style.display='block';"
+        />
+
+        <!-- Logo text dự phòng nếu hình ảnh không load được -->
+        <div id="text-logo" class="hidden">
+          <h1 class="text-4xl font-extrabold text-gray-800">
+            Lemon <span class="lemon-text">Patisserie</span> 🍋
+          </h1>
+          <p class="text-sm text-gray-500 mt-1">Nơi vị giác thăng hoa</p>
+        </div>
+      </header>
+
+      <!-- Thẻ Voucher Chính (Đã thay bằng hình ảnh PNG) -->
+      <div class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden">
+        <img
+          src="images/voucher.png"
+          alt="Voucher Mua 1 Tặng 1 từ Lemon Patisserie"
+          class="responsive-voucher-image"
+          onerror="this.onerror=null; this.src='https://placehold.co/400x200/FDE047/333333?text=VOUCHER+MUA+1+TẶNG+1';"
+        />
+      </div>
+
+      <!-- Chi tiết Chương trình -->
+      <section class="mb-6">
+        <h3
+          class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-yellow-300 pb-1"
+        >
+          CÁCH THỨC NHẬN VOUCHER
+        </h3>
+        <div class="space-y-4 text-gray-700">
+          <div class="flex items-start">
+            <span class="text-2xl mr-3">🎉</span>
+            <p>
+              Lemon Patisserie chuẩn bị trình làng Menu Eclair mới cùng nhiều
+              hương vị độc đáo khác!
+            </p>
+          </div>
+          <div class="flex items-start">
+            <span class="text-2xl mr-3">🗓️</span>
+            <p>
+              Khách hàng ghé thăm và mua bất kỳ sản phẩm nào tại tiệm vào hai
+              ngày:
+              <span class="block text-lg font-extrabold text-red-500 mt-1"
+                >14 & 15/10/2025</span
+              >
+            </p>
+          </div>
+          <div class="flex items-start">
+            <span class="text-2xl mr-3">🎁</span>
+            <p>
+              Bạn sẽ nhận ngay VOUCHER MUA 1 TẶNG 1 để sử dụng cho menu mới khi
+              chính thức được mở bán.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Điều kiện áp dụng voucher (sau khi nhận) -->
+      <section class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
+          <span class="text-2xl mr-2">✨</span> Lưu ý
+        </h3>
+        <ul class="text-sm text-gray-600 list-disc ml-5 space-y-1">
+          <li>Voucher áp dụng cho Menu Eclair và các món bánh mới.</li>
+          <li>Chương trình áp dụng đến hết ngày 15/10/2025</li>
+          <li>Đây là cơ hội tuyệt vời để bạn trải nghiệm hương vị mới!</li>
+        </ul>
+      </section>
+
+      <!-- CTA & Hình ảnh -->
+      <div class="text-center mt-6">
+        <button
+          class="cta-button lemon-bg text-gray-900 font-bold py-3 px-6 rounded-full text-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105"
+        >
+          Lemon Patisserie
+        </button>
+        <div class="mt-4">
+          <!-- Placeholder cho hình ảnh design của chương trình -->
+          <img
+            src="images/box.jpg"
+            alt="Hình ảnh quảng cáo chương trình Mua 1 Tặng 1"
+            class="w-full h-auto rounded-lg shadow-md mx-auto"
+            onerror="this.onerror=null; this.src='https://placehold.co/400x200/FDE047/333333?text=Nơi+Đặt+Ảnh+Design+Của+Bạn';"
+          />
+        </div>
+      </div>
+
+      <!-- Footer/Thông tin liên hệ -->
+      <footer class="text-center mt-6 pt-4 border-t border-gray-100">
+        <p class="text-sm text-gray-500">Mọi chi tiết xin liên hệ:</p>
+        <p class="text-md font-semibold text-gray-700">Hotline: 032 551 6166</p>
+        <p class="text-md font-semibold text-gray-700">
+          Địa chỉ: 116k9 Nguyễn Hiền, Bạch Mai, Hà Nội
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const cover = document.getElementById("reveal-cover");
+      const voucherContainer = document.getElementById("voucher-container");
+      const openButton = document.getElementById("open-gift-btn");
+
+      /**
+       * Hàm xử lý animation mở quà và hiển thị nội dung voucher chính.
+       */
+      function revealVoucher() {
+        // 1. Thêm lớp để bắt đầu animation ẩn cover (fade-out, scale up)
+        cover.classList.add("is-revealed");
+
+        // 2. Sau 100ms (sau khi cover bắt đầu ẩn), thêm lớp để hiển thị nội dung chính
+        setTimeout(() => {
+          voucherContainer.classList.add("is-active");
+        }, 100);
+
+        // 3. (Tùy chọn) Ẩn hoàn toàn cover sau khi animation kết thúc (1.1 giây)
+        setTimeout(() => {
+          cover.style.display = "none";
+        }, 1100);
+      }
+
+      // Gán sự kiện cho nút "BẤM ĐỂ MỞ NGAY"
+      openButton.addEventListener("click", revealVoucher);
+
+      // Cũng có thể cho phép nhấn vào bất kỳ đâu trên cover để mở
+      cover.addEventListener("click", (e) => {
+        // Ngăn chặn việc kích hoạt hai lần nếu nhấn vào nút
+        if (e.target.id !== "open-gift-btn") {
+          revealVoucher();
+        }
+      });
+    </script>
+  </body>
+</html>
