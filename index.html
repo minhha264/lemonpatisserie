@@ -3,612 +3,1389 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lemon Patisserie - Voucher Mua 1 Tặng 1</title>
-    <!-- Tải Tailwind CSS CDN -->
+    <title>Luyện Thi Luật Kinh Doanh Bảo Hiểm + AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tải Font Montserrat Bold -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <!-- Thư viện để hiển thị văn bản AI trả về đẹp hơn (Markdown) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-      /* Thiết lập font chữ Montserrat Bold mặc định và background */
       body {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 700; /* Đảm bảo font bold được sử dụng */
-        background-color: #fef9e7; /* Màu kem nhạt */
-        display: flex;
-        /* Căn giữa nội dung chính theo chiều ngang */
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        padding: 20px 10px;
-        overflow-x: hidden; /* Ngăn chặn cuộn ngang */
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
-      /* Custom Tailwind config (sử dụng màu chanh đặc trưng) */
-      .lemon-bg {
-        background-color: #fde047; /* Màu vàng chanh/Amber 400 */
+      .fade-in {
+        animation: fadeIn 0.3s ease-in-out;
       }
-      .lemon-text {
-        color: #d97706; /* Màu cam đậm/Amber 700 */
-      }
-      .shadow-lemon {
-        box-shadow: 0 10px 15px -3px rgba(253, 224, 71, 0.5),
-          0 4px 6px -2px rgba(253, 224, 71, 0.2);
-      }
-
-      /* ------------------------------------------------------------------ */
-      /* Animation Breathing cho ảnh Voucher */
-      @keyframes breathing {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.02);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      .voucher-breathing {
-        animation: breathing 4s ease-in-out infinite;
-      }
-      /* ------------------------------------------------------------------ */
-
-      /* Hiệu ứng nhấp nháy cho CTA (trước và sau khi mở) */
-      @keyframes pulse-shadow {
-        0%,
-        100% {
-          box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7);
-        }
-        50% {
-          box-shadow: 0 0 0 10px rgba(253, 224, 71, 0);
-        }
-      }
-      .cta-button {
-        animation: pulse-shadow 2s infinite;
-      }
-
-      /* ----- Styles cho hiệu ứng mở quà ----- */
-      #reveal-cover {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #fef9e7;
-        z-index: 50;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-        padding: 20px; /* Tối ưu padding cho di động */
-      }
-
-      #reveal-cover.is-revealed {
-        opacity: 0;
-        transform: scale(1.1);
-        pointer-events: none;
-      }
-
-      #voucher-container {
-        /* Nội dung chính được ẩn ban đầu và sẽ được hiển thị bằng JS */
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease-in-out 0.5s,
-          transform 0.8s ease-in-out 0.5s;
-      }
-
-      #voucher-container.is-active {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .gift-box {
-        background-color: #ffffff;
-        border: 4px solid #fde047;
-        padding: 30px 20px;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        width: 100%;
-        max-width: 380px;
-      }
-
-      .open-button {
-        background-color: #d97706; /* Màu cam đậm */
-        color: white;
-        padding: 12px 24px;
-        font-size: 1.125rem;
-        font-weight: bold;
-        border-radius: 9999px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s;
-      }
-
-      /* ----- BACKGROUND ANIMATION (MƯA BÁNH NGỌT BÊN TRONG CONTAINER) ----- */
-      .voucher-animated-item {
-        position: absolute;
-        opacity: 0;
-        animation: fall-in-container linear infinite;
-        z-index: 1; /* Đảm bảo nằm trên nền trắng nhưng dưới nội dung */
-        user-select: none;
-        pointer-events: none;
-      }
-
-      @keyframes fall-in-container {
-        0% {
-          transform: translateY(-100%) rotate(0deg);
+      @keyframes fadeIn {
+        from {
           opacity: 0;
+          transform: translateY(10px);
         }
-        10% {
-          opacity: 0.5;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
+      .shake {
+        animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+      @keyframes shake {
+        10%,
         90% {
-          opacity: 0.5;
+          transform: translate3d(-1px, 0, 0);
         }
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
+        }
+      }
+      .history-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .history-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .history-scroll::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      .history-scroll::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Hiệu ứng loading cho AI */
+      .typing-indicator span {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out both;
+        margin: 0 2px;
+      }
+      .typing-indicator span:nth-child(1) {
+        animation-delay: -0.32s;
+      }
+      .typing-indicator span:nth-child(2) {
+        animation-delay: -0.16s;
+      }
+      @keyframes typing {
+        0%,
+        80%,
         100% {
-          transform: translateY(100vh) rotate(360deg);
-          opacity: 0;
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
         }
       }
 
-      /* Tăng tốc độ animation gấp đôi (Giảm duration xuống ~1/2) */
-      .voucher-animated-item:nth-child(1) {
-        left: 10%;
-        animation-duration: 12.5s;
-        animation-delay: 0s;
+      /* Markdown styles override */
+      .markdown-body p {
+        margin-bottom: 0.5em;
       }
-      .voucher-animated-item:nth-child(2) {
-        left: 30%;
-        animation-duration: 15s;
-        animation-delay: 2.5s; /* Giảm delay */
+      .markdown-body ul {
+        list-style-type: disc;
+        margin-left: 1.5em;
+        margin-bottom: 0.5em;
       }
-      .voucher-animated-item:nth-child(3) {
-        left: 50%;
-        animation-duration: 10s;
-        animation-delay: 5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(4) {
-        left: 70%;
-        animation-duration: 17.5s;
-        animation-delay: 7.5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(5) {
-        left: 90%;
-        animation-duration: 14s;
-        animation-delay: 10s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(6) {
-        left: 5%;
-        animation-duration: 16s;
-        animation-delay: 12.5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(7) {
-        left: 85%;
-        animation-duration: 13s;
-        animation-delay: 15s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(8) {
-        left: 45%;
-        animation-duration: 19s;
-        animation-delay: 17.5s; /* Giảm delay */
-      }
-      /* Tăng tốc độ cho 8 icon còn lại */
-      .voucher-animated-item:nth-child(9) {
-        left: 20%;
-        animation-duration: 11s;
-        animation-delay: 1s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(10) {
-        left: 40%;
-        animation-duration: 15.5s;
-        animation-delay: 3.5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(11) {
-        left: 60%;
-        animation-duration: 12s;
-        animation-delay: 6s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(12) {
-        left: 80%;
-        animation-duration: 18s;
-        animation-delay: 8.5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(13) {
-        left: 15%;
-        animation-duration: 14.5s;
-        animation-delay: 11s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(14) {
-        left: 25%;
-        animation-duration: 16.5s;
-        animation-delay: 13.5s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(15) {
-        left: 55%;
-        animation-duration: 13.5s;
-        animation-delay: 16s; /* Giảm delay */
-      }
-      .voucher-animated-item:nth-child(16) {
-        left: 75%;
-        animation-duration: 17s;
-        animation-delay: 18.5s; /* Giảm delay */
-      }
-
-      .responsive-voucher-image {
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        /* Áp dụng animation thở */
-        transform: translateZ(0); /* Kích hoạt hardware acceleration */
-      }
-      .social-icon-img {
-        width: 40px;
-        height: 40px;
-        transition: transform 0.3s;
-      }
-      .social-icon-img:hover {
-        transform: scale(1.25);
+      .markdown-body strong {
+        font-weight: 700;
+        color: #1e40af;
       }
     </style>
   </head>
-  <body>
-    <!-- ------------------------------------------------------------------ -->
-    <!-- NHẠC NỀN (BACKGROUND MUSIC) -->
-    <!-- Thêm thẻ audio với autoplay, loop và MUTED (bắt buộc do trình duyệt) -->
-    <audio id="background-music" loop muted autoplay>
-      <!-- VUI LÒNG THAY THẾ 'aaab.m4a' BẰNG ĐƯỜNG DẪN THẬT CỦA FILE M4A CỦA BẠN -->
-      <source src="aaab.m4a" type="audio/mp4" />
-      Trình duyệt của bạn không hỗ trợ phần tử audio.
-    </audio>
-    <!-- ------------------------------------------------------------------ -->
-
-    <!-- PHẦN 1: MÀN HÌNH MỞ QUÀ (REVEAL COVER) -->
-    <div id="reveal-cover">
-      <div class="gift-box w-11/12 max-w-sm">
-        <!-- Thay icon hộp quà bằng hình ảnh PNG -->
-        <img
-          src="images/LOGO PNG.png"
-          alt="Bạn có một món quà"
-          class="w-full h-auto mb-4"
-          onerror="this.onerror=null; this.src='https://placehold.co/300x150/fef9e7/d97706?text=BẠN+CÓ+MỘT+MÓN+QUÀ';"
-        />
-
-        <p class="text-gray-600 mt-2 text-sm">
-          Nhấn vào nút bên dưới để mở thư mời và khám phá ưu đãi đặc biệt từ
-        </p>
-        <p>
-          <b>Lemon Patisserie</b>
-        </p>
-        <button id="open-gift-btn" class="open-button cta-button mt-8">
-          BẤM ĐỂ MỞ NGAY
-        </button>
-      </div>
-    </div>
-
-    <!-- PHẦN 2: NỘI DUNG CHÍNH (VOUCHER CONTAINER) -->
-    <!-- Khối chứa nội dung chính, giới hạn kích thước cho trải nghiệm di động tốt -->
+  <body class="bg-gray-100 min-h-screen text-gray-800 relative">
     <div
-      id="voucher-container"
-      class="w-full max-w-md bg-white p-6 md:p-8 rounded-2xl shadow-2xl border-4 border-yellow-300 relative z-10"
-      style="overflow: hidden"
+      class="max-w-3xl mx-auto min-h-screen flex flex-col shadow-2xl bg-white relative"
     >
-      <!-- Vị trí mới của MƯA BÁNH NGỌT: Bên trong #voucher-container -->
-      <div class="absolute inset-0 z-0 pointer-events-none opacity-50">
-        <!-- 16 icon bánh ngọt với kích thước và đường dẫn placeholder mới -->
-        <img
-          class="voucher-animated-item"
-          style="width: 65px; height: 65px"
-          src="images/icon1.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 55px; height: 55px"
-          src="images/icon2.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 70px; height: 70px"
-          src="images/3.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 60px; height: 60px"
-          src="images/4.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 75px; height: 75px"
-          src="images/5.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 62px; height: 62px"
-          src="images/6.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 68px; height: 68px"
-          src="images/7.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 58px; height: 58px"
-          src="images/8.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 65px; height: 65px"
-          src="images/icon2.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 55px; height: 55px"
-          src="images/icon1.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 70px; height: 70px"
-          src="images/3.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 60px; height: 60px"
-          src="images/4.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 75px; height: 75px"
-          src="images/6.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 62px; height: 62px"
-          src="images/5.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 68px; height: 68px"
-          src="images/8.png"
-          alt="Bánh ngọt rơi"
-        />
-        <img
-          class="voucher-animated-item"
-          style="width: 58px; height: 58px"
-          src="images/7.png"
-          alt="Bánh ngọt rơi"
-        />
-      </div>
+      <!-- Header -->
+      <header
+        class="bg-blue-600 text-white p-4 shadow-md z-10 sticky top-0 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold flex items-center">
+          <i class="fas fa-shield-alt mr-2"></i>Luật KD Bảo Hiểm
+        </h1>
+        <div class="flex space-x-2">
+          <button
+            onclick="app.toggleChat()"
+            class="text-sm bg-indigo-500 hover:bg-indigo-600 px-3 py-1 rounded transition border border-indigo-400 flex items-center shadow-sm"
+          >
+            <i class="fas fa-robot mr-1"></i> Trợ lý Luật
+          </button>
+          <button
+            id="btn-history"
+            onclick="app.toggleHistory()"
+            class="text-sm bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded transition"
+          >
+            <i class="fas fa-history mr-1"></i> Lịch sử
+          </button>
+        </div>
+      </header>
 
-      <div class="relative z-10">
-        <!-- Nội dung chính đặt trên lớp z-10 -->
-        <!-- Tiêu đề Tiệm Bánh với Logo -->
-        <header class="text-center mb-6">
-          <!-- LOGO -->
-          <img
-            src="images/LOGO PNG.png"
-            alt="Logo Lemon Patisserie"
-            class="w-48 mx-auto h-auto mb-3"
-            onerror="this.onerror=null; this.style.display='none'; document.getElementById('text-logo').style.display='block';"
-          />
-
-          <!-- Logo text dự phòng nếu hình ảnh không load được -->
-          <div id="text-logo" class="hidden">
-            <h1 class="text-4xl font-extrabold text-gray-800">
-              Lemon <span class="lemon-text">Patisserie</span> 🍋
-            </h1>
-            <p class="text-sm text-gray-500 mt-1">Nơi vị giác thăng hoa</p>
-          </div>
-        </header>
-
-        <!-- Thẻ Voucher Chính (Đã thay bằng hình ảnh PNG) -->
+      <!-- Main Content Area -->
+      <main class="flex-grow p-4 relative overflow-hidden flex flex-col">
+        <!-- Screen: Welcome -->
         <div
-          class="text-center mb-6 shadow-lemon rounded-xl overflow-hidden voucher-breathing"
+          id="screen-welcome"
+          class="fade-in flex flex-col items-center justify-center flex-grow py-10"
         >
-          <img
-            src="images/voucher.png"
-            alt="Voucher Mua 1 Tặng 1 từ Lemon Patisserie"
-            class="responsive-voucher-image"
-            onerror="this.onerror=null; this.src='https://placehold.co/400x200/FDE047/333333?text=VOUCHER+MUA+1+TẶNG+1';"
-          />
+          <div
+            class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600 text-4xl shadow-inner"
+          >
+            <i class="fas fa-book-open"></i>
+          </div>
+          <h2 class="text-2xl font-bold mb-2 text-center">Ôn Tập Kiến Thức</h2>
+          <p class="text-gray-500 mb-8 text-center max-w-md px-4">
+            Bộ đề trắc nghiệm gồm 40 câu hỏi về Luật Kinh doanh bảo hiểm.<br />
+            <span class="text-indigo-600 font-medium text-sm mt-2 block"
+              ><i class="fas fa-sparkles"></i> Tích hợp AI Gemini hỗ trợ giải
+              đáp</span
+            >
+          </p>
+
+          <div class="w-full max-w-xs space-y-4 px-4">
+            <button
+              onclick="app.startQuiz()"
+              class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold shadow-lg hover:bg-blue-700 transform active:scale-95 transition"
+            >
+              Bắt đầu làm bài
+            </button>
+            <div class="text-center text-sm text-gray-400">
+              Dữ liệu: Đề số 1
+            </div>
+          </div>
         </div>
 
-        <!-- Chi tiết Chương trình -->
-        <section class="mb-6">
-          <h3
-            class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-yellow-300 pb-1"
-          >
-            📅 CÁCH THỨC NHẬN VOUCHER
-          </h3>
-          <div class="space-y-4 text-gray-700">
-            <div class="flex items-start">
-              <span class="text-2xl mr-3">🎉</span>
-              <p>
-                Lemon Patisserie chuẩn bị trình làng Menu Eclair mới cùng nhiều
-                hương vị độc đáo khác!
-              </p>
+        <!-- Screen: Quiz -->
+        <div id="screen-quiz" class="hidden h-full flex flex-col">
+          <!-- Progress Bar -->
+          <div class="mb-4">
+            <div class="flex justify-between text-xs text-gray-500 mb-1">
+              <span id="question-counter">Câu 1/40</span>
+              <span id="score-counter" class="font-bold text-blue-600"
+                >Điểm: 0</span
+              >
             </div>
-            <div class="flex items-start">
-              <span class="text-2xl mr-3">🗓️</span>
-              <p>
-                Khách hàng ghé thăm và mua bất kỳ sản phẩm nào tại tiệm vào hai
-                ngày:
-                <span class="block text-lg font-extrabold text-red-500 mt-1"
-                  >14 & 15/10/2025</span
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                id="progress-bar"
+                class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Scrollable Content -->
+          <div class="flex-grow overflow-y-auto pr-1 pb-20 custom-scrollbar">
+            <!-- Question Card -->
+            <div class="bg-white rounded-lg mb-4">
+              <span
+                class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded mb-2"
+                >Câu hỏi</span
+              >
+              <h3
+                id="question-text"
+                class="text-lg font-medium leading-relaxed"
+              >
+                Loading...
+              </h3>
+            </div>
+
+            <!-- Options -->
+            <div id="options-container" class="space-y-3 mb-6">
+              <!-- Options will be injected here -->
+            </div>
+
+            <!-- Feedback Area (Hidden by default) -->
+            <div
+              id="feedback-area"
+              class="hidden mb-6 rounded-lg border border-gray-200 shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <!-- Basic Feedback -->
+              <div id="feedback-header" class="p-4 border-l-4">
+                <div class="flex items-start">
+                  <div id="feedback-icon" class="text-2xl mr-3 mt-1"></div>
+                  <div>
+                    <h4 id="feedback-title" class="font-bold"></h4>
+                    <p
+                      id="feedback-text"
+                      class="text-sm mt-1 text-gray-700"
+                    ></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Explanation Section -->
+              <div class="bg-indigo-50 p-3 border-t border-indigo-100">
+                <div id="ai-explain-btn-container">
+                  <button
+                    onclick="app.explainWithAI()"
+                    class="flex items-center text-indigo-700 font-semibold text-sm hover:text-indigo-900 transition"
+                  >
+                    <i class="fas fa-sparkles mr-2 text-yellow-500"></i> Giải
+                    thích chi tiết với Gemini AI
+                  </button>
+                </div>
+                <div
+                  id="ai-explanation-content"
+                  class="hidden mt-2 text-sm text-gray-800 markdown-body pl-2 border-l-2 border-indigo-300"
                 >
-              </p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-2xl mr-3">🎁</span>
-              <p>
-                Bạn sẽ nhận ngay VOUCHER MUA 1 TẶNG 1 để sử dụng cho menu mới
-                khi chính thức được mở bán.
-              </p>
+                  <!-- AI Content here -->
+                </div>
+              </div>
             </div>
           </div>
-        </section>
 
-        <!-- Điều kiện áp dụng voucher (sau khi nhận) -->
-        <section class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
-            <span class="text-2xl mr-2">✨</span> Lưu ý
-          </h3>
-          <ul class="text-sm text-gray-600 list-disc ml-5 space-y-1">
-            <li>Voucher áp dụng cho Menu Eclair và các món bánh mới.</li>
-            <li>Chương trình áp dụng đến hết ngày 15/10/2025</li>
-            <li>Đây là cơ hội tuyệt vời để bạn trải nghiệm hương vị mới!</li>
-          </ul>
-        </section>
-
-        <!-- CTA & Hình ảnh -->
-        <div class="text-center mt-6">
-          <!-- ĐÃ SỬA: Thay button bằng thẻ <a> và đổi nội dung thành "ĐẶT BÁNH NGAY" -->
-          <a
-            href="order.html"
-            class="cta-button lemon-bg text-gray-900 font-bold py-3 px-6 rounded-full text-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105 inline-block"
-            style="text-decoration: none"
+          <!-- Next Button (Fixed at bottom) -->
+          <div
+            class="absolute bottom-0 left-0 w-full p-4 bg-white border-t border-gray-100 z-10"
           >
-            ĐẶT BÁNH NGAY
-          </a>
-          <div class="mt-4">
-            <!-- Placeholder cho hình ảnh design của chương trình -->
-            <img
-              src="images/box.jpg"
-              alt="Hình ảnh quảng cáo chương trình Mua 1 Tặng 1"
-              class="w-full h-auto rounded-lg shadow-md mx-auto"
-              onerror="this.onerror=null; this.src='https://placehold.co/400x200/FDE047/333333?text=Nơi+Đặt+Ảnh+Design+Của+Bạn';"
-            />
+            <button
+              id="btn-next"
+              onclick="app.nextQuestion()"
+              class="w-full bg-gray-300 text-gray-500 py-3 rounded-lg font-bold cursor-not-allowed transition shadow-md"
+              disabled
+            >
+              Câu tiếp theo <i class="fas fa-arrow-right ml-2"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Social Media Links (Mới thêm) -->
-        <section class="text-center mt-8 pt-4 border-t border-gray-100">
-          <h3 class="text-md font-bold text-gray-800 mb-4">
-            Kết Nối Với Lemon Patisserie
-          </h3>
-          <div class="flex justify-center space-x-8">
-            <!-- Facebook Icon -->
-            <a
-              href="https://www.facebook.com/share/1CrsC73tKX/"
-              target="_blank"
-              class="transition transform hover:scale-125"
-              aria-label="Facebook"
-            >
-              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
-              <img
-                src="images/fbicon.webp"
-                alt="Facebook Icon"
-                class="social-icon-img"
-                onerror="this.onerror=null; this.src='https://placehold.co/40x40/3B5998/FFFFFF?text=FB';"
+        <!-- Screen: Result -->
+        <div
+          id="screen-result"
+          class="hidden fade-in text-center py-10 flex-col items-center justify-center h-full"
+        >
+          <div class="mb-6 relative inline-block">
+            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="#e5e7eb"
+                stroke-width="10"
               />
-            </a>
-            <!-- Instagram Icon -->
-            <a
-              href="https://www.instagram.com/lemonpatisserie.vn?igsh=cWQyemJndGdzd3hq"
-              target="_blank"
-              class="transition transform hover:scale-125"
-              aria-label="Instagram"
-            >
-              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
-              <img
-                src="images/Instagram_icon.png"
-                alt="Instagram Icon"
-                class="social-icon-img"
-                onerror="this.onerror=null; this.src='https://placehold.co/40x40/E1306C/FFFFFF?text=IG';"
+              <circle
+                id="score-circle"
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="10"
+                stroke-dasharray="283"
+                stroke-dashoffset="283"
+                class="transition-all duration-1000 ease-out"
               />
-            </a>
-            <!-- TikTok Icon -->
-            <a
-              href="https://www.tiktok.com/@lemonpatisserie.vn?_t=ZS-90WBJuYfmTf&_r=1"
-              target="_blank"
-              class="transition transform hover:scale-125"
-              aria-label="TikTok"
+            </svg>
+            <div
+              class="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col"
             >
-              <!-- SỬA LỖI: Thay thế SVG bằng thẻ IMG để sử dụng file của bạn -->
-              <img
-                src="images/tiktokicon.png"
-                alt="TikTok Icon"
-                class="social-icon-img"
-                onerror="this.onerror=null; this.src='https://placehold.co/40x40/000000/FFFFFF?text=TK';"
-              />
-            </a>
+              <span id="final-score" class="text-3xl font-bold text-gray-800"
+                >0</span
+              >
+              <span class="text-xs text-gray-500">/ 40</span>
+            </div>
           </div>
-        </section>
 
-        <!-- Footer/Thông tin liên hệ -->
-        <footer class="text-center mt-6 pt-4 border-t border-gray-100">
-          <p class="text-sm text-gray-500">Mọi chi tiết xin liên hệ:</p>
-          <p class="text-md font-semibold text-gray-700">
-            Hotline: 032 551 6166
+          <h2 id="result-message" class="text-2xl font-bold mb-2">
+            Hoàn thành!
+          </h2>
+          <p id="result-submessage" class="text-gray-600 mb-8">
+            Bạn đã làm rất tốt.
           </p>
-          <p class="text-md font-semibold text-gray-700">
-            Địa chỉ: 116k9 Nguyễn Hiền, Bạch Mai, Hà Nội
-          </p>
-        </footer>
-      </div>
+
+          <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8 w-full px-4">
+            <div class="bg-green-50 p-3 rounded-lg">
+              <div class="text-green-600 font-bold text-xl" id="count-correct">
+                0
+              </div>
+              <div class="text-xs text-gray-500">Đúng</div>
+            </div>
+            <div class="bg-red-50 p-3 rounded-lg">
+              <div class="text-red-600 font-bold text-xl" id="count-wrong">
+                0
+              </div>
+              <div class="text-xs text-gray-500">Sai</div>
+            </div>
+          </div>
+
+          <div class="space-y-3 max-w-xs mx-auto w-full px-4">
+            <button
+              onclick="app.restartQuiz()"
+              class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 shadow-md transition"
+            >
+              <i class="fas fa-redo mr-2"></i> Làm lại (Đảo câu hỏi)
+            </button>
+            <button
+              onclick="app.returnHome()"
+              class="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition"
+            >
+              Về trang chủ
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen: History Overlay -->
+        <div
+          id="screen-history"
+          class="hidden absolute inset-0 bg-white z-40 flex flex-col transform transition-transform duration-300 translate-x-full shadow-2xl"
+        >
+          <div
+            class="bg-gray-50 p-4 border-b flex justify-between items-center"
+          >
+            <h2 class="font-bold text-lg text-gray-800">
+              <i class="fas fa-history mr-2 text-blue-500"></i>Lịch sử làm bài
+            </h2>
+            <button
+              onclick="app.toggleHistory()"
+              class="text-gray-500 hover:text-gray-800 p-2 rounded-full hover:bg-gray-200 transition"
+            >
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <div class="flex-grow p-4 overflow-y-auto history-scroll">
+            <div
+              id="history-chart-container"
+              class="mb-6 h-48 flex items-end justify-between space-x-2 px-2 border-b border-l border-gray-300 relative"
+            >
+              <!-- Bars will be injected here -->
+              <div
+                class="absolute top-1/2 left-0 w-full text-center text-gray-400 text-sm italic"
+                id="no-history-msg"
+              >
+                Chưa có dữ liệu
+              </div>
+            </div>
+            <ul id="history-list" class="space-y-3">
+              <!-- History items -->
+            </ul>
+          </div>
+          <div class="p-4 border-t bg-gray-50">
+            <button
+              onclick="app.clearHistory()"
+              class="w-full text-red-500 text-sm font-medium hover:text-red-700 transition"
+            >
+              Xóa lịch sử
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen: AI Chat Overlay -->
+        <div
+          id="screen-chat"
+          class="hidden absolute inset-0 bg-white z-50 flex flex-col transform transition-transform duration-300 translate-y-full shadow-2xl"
+        >
+          <div
+            class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md"
+          >
+            <div>
+              <h2 class="font-bold text-lg">
+                <i class="fas fa-robot mr-2"></i>Trợ lý Luật Sư AI
+              </h2>
+              <p class="text-xs text-indigo-200">
+                Hỏi đáp về Luật Kinh doanh Bảo hiểm
+              </p>
+            </div>
+            <button
+              onclick="app.toggleChat()"
+              class="text-white hover:text-gray-200 p-2 rounded-full hover:bg-indigo-700 transition"
+            >
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+
+          <div
+            id="chat-messages"
+            class="flex-grow p-4 overflow-y-auto bg-gray-50 space-y-4"
+          >
+            <!-- Chat messages -->
+            <div class="flex items-start">
+              <div
+                class="bg-indigo-100 rounded-lg rounded-tl-none p-3 max-w-[85%] text-sm text-gray-800"
+              >
+                Xin chào! Tôi là trợ lý ảo được tích hợp Gemini. Bạn có thắc mắc
+                gì về Luật Bảo hiểm không?
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 border-t bg-white">
+            <div class="flex items-center space-x-2">
+              <input
+                id="chat-input"
+                type="text"
+                placeholder="Nhập câu hỏi của bạn..."
+                class="flex-grow border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              />
+              <button
+                onclick="app.sendChatMessage()"
+                class="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-indigo-700 transition shadow-sm"
+              >
+                <i class="fas fa-paper-plane text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script>
-      const cover = document.getElementById("reveal-cover");
-      const voucherContainer = document.getElementById("voucher-container");
-      const openButton = document.getElementById("open-gift-btn");
-      const audio = document.getElementById("background-music"); // Lấy phần tử audio
+      // --- CONFIG ---
+      // Vui lòng điền API Key Gemini của bạn vào đây
+      const apiKey = "AIzaSyAdAt4T_IVorLjNCRJ_F54ITNce2vLREQc";
 
-      /**
-       * Hàm xử lý animation mở quà và hiển thị nội dung voucher chính.
-       */
-      function revealVoucher() {
-        // 1. Thêm lớp để bắt đầu animation ẩn cover (fade-out, scale up)
-        cover.classList.add("is-revealed");
+      // --- DATA ---
+      const rawQuestions = [
+        {
+          q: "Theo Luật Kinh doanh bảo hiểm, khi xảy ra sự kiện bảo hiểm, doanh nghiệp bảo hiểm phải bồi thường, trả tiền bảo hiểm trong thời hạn bao lâu (nếu không có thỏa thuận)?",
+          options: [
+            "Theo thời hạn đã thỏa thuận trong hợp đồng bảo hiểm.",
+            "Trong thời hạn 15 ngày kể từ ngày nhận được đầy đủ hồ sơ hợp lệ.",
+            "Cả A và B đều đúng.",
+          ],
+          correct: 1,
+          explanation:
+            "Theo Luật, nếu không có thỏa thuận khác, thời hạn là 15 ngày kể từ ngày nhận đủ hồ sơ hợp lệ.",
+        },
+        {
+          q: "Theo Luật Kinh doanh bảo hiểm, phát biểu nào sau đây đúng nhất về đại lý bảo hiểm?",
+          options: [
+            "Tổ chức có quyền đồng thời làm đại lý cho mọi DNBH.",
+            "Cá nhân có quyền đồng thời làm đại lý cho mọi DNBH.",
+            "Cá nhân không được đồng thời làm đại lý cho DNBH khác hoạt động cùng loại hình (nếu chưa được chấp thuận).",
+            "Cả A và B đúng.",
+          ],
+          correct: 2,
+          explanation:
+            "Nguyên tắc chung để tránh xung đột lợi ích: Cá nhân không được làm đại lý cho DNBH đối thủ cùng loại hình trừ khi được chấp thuận.",
+        },
+        {
+          q: "Chọn phương án đúng về quyền, nghĩa vụ của doanh nghiệp bảo hiểm:",
+          options: [
+            "Có quyền thay đổi người thụ hưởng bảo hiểm.",
+            "Có trách nhiệm điền thông tin vào giấy yêu cầu bảo hiểm.",
+            "Trực tiếp chi trả hoa hồng bảo hiểm cho người được bảo hiểm.",
+            "Cung cấp cho bên mua bảo hiểm bằng chứng giao kết hợp đồng bảo hiểm.",
+          ],
+          correct: 3,
+          explanation:
+            "DNBH phải cung cấp Giấy chứng nhận/Hợp đồng. A là quyền bên mua, B là trách nhiệm bên mua/đại lý hướng dẫn, C bị cấm.",
+        },
+        {
+          q: "Theo Luật KDBH, bên mua bảo hiểm có quyền chuyển giao hợp đồng bảo hiểm không?",
+          options: [
+            "Bên mua bảo hiểm không có quyền chuyển giao.",
+            "Bên mua bảo hiểm có quyền chuyển giao hợp đồng bảo hiểm.",
+            "Bên mua bảo hiểm có thể chuyển giao cho bất kỳ người nào.",
+          ],
+          correct: 1,
+          explanation:
+            "Luật cho phép chuyển giao hợp đồng bảo hiểm theo quy định cụ thể của từng loại hình.",
+        },
+        {
+          q: "Chọn phương án đúng nhất về các loại hợp đồng bảo hiểm quy định tại Luật kinh doanh bảo hiểm:",
+          options: [
+            "Hợp đồng bảo hiểm sức khỏe.",
+            "Hợp đồng bảo hiểm tài sản.",
+            "Hợp đồng bảo hiểm trách nhiệm.",
+            "Cả 3 loại trên.",
+          ],
+          correct: 3,
+          explanation:
+            "Luật chia thành 3 loại cơ bản: Nhân thọ, Phi nhân thọ (bao gồm tài sản, trách nhiệm...), và Sức khỏe.",
+        },
+        {
+          q: "Rủi ro thuần túy là rủi ro có hậu quả:",
+          options: [
+            "Liên quan đến khả năng đầu cơ.",
+            "Liên quan đến khả năng tổn thất.",
+            "Liên quan đến khả năng đầu cơ và khả năng tổn thất.",
+            "Không phương án nào đúng.",
+          ],
+          correct: 1,
+          explanation:
+            "Rủi ro thuần túy chỉ mang lại hậu quả tổn thất hoặc không tổn thất (không có cơ hội kiếm lời).",
+        },
+        {
+          q: "DNBH có được trả hoa hồng bảo hiểm cho đại lý bảo hiểm trong trường hợp đấu thầu không?",
+          options: ["Có.", "Không."],
+          correct: 0,
+          explanation:
+            "Luật Kinh doanh bảo hiểm CÓ quy định về việc không được trả hoa hồng trong đấu thầu (để đảm bảo minh bạch ngân sách).",
+        },
+        {
+          q: "Nguyên tắc thế quyền được hiểu thế nào là đúng nhất?",
+          options: [
+            "Người được BH chuyển quyền yêu cầu người thứ ba bồi hoàn cho DNBH.",
+            "DNBH đòi bồi hoàn bên thứ ba trong phạm vi số tiền đã bồi thường.",
+            "Không áp dụng đối với BH nhân thọ và BH sức khỏe.",
+            "Cả A và B đúng.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 4,
+          explanation:
+            "Thế quyền áp dụng cho BH phi nhân thọ (tài sản/trách nhiệm), không áp dụng cho con người (nhân thọ/sức khỏe).",
+        },
+        {
+          q: "Trường hợp chậm thông báo sự kiện bảo hiểm có lý do chính đáng, DNBH có được áp dụng điều khoản loại trừ không?",
+          options: ["Có.", "Không."],
+          correct: 1,
+          explanation:
+            "Nếu có lý do chính đáng (bất khả kháng), DNBH không được từ chối hoặc phạt vi phạm thông báo.",
+        },
+        {
+          q: "Chọn phương án đúng nhất về chuyển giao hợp đồng bảo hiểm:",
+          options: [
+            "Bên mua có quyền chuyển giao.",
+            "Đối với BH nhân thọ, phải được sự đồng ý của người được bảo hiểm.",
+            "Bên nhận chuyển giao phải có quyền lợi có thể được bảo hiểm.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 3,
+          explanation:
+            "Quy định đầy đủ bao gồm quyền chuyển giao, sự đồng ý (đối với con người) và quyền lợi bảo hiểm của bên nhận.",
+        },
+        {
+          q: "Chọn phương án SAI về phạm vi bảo hiểm:",
+          options: [
+            "Phạm vi BH là giới hạn rủi ro, tổn thất DNBH chịu trách nhiệm.",
+            "Phạm vi BH bao gồm rủi ro, tổn thất và chi phí phát sinh.",
+            "Phạm vi BH căn cứ theo quy tắc, điều khoản hợp đồng.",
+            "Phương án A và C đúng (Chọn câu này vì nó khẳng định sai).",
+          ],
+          correct: 3,
+          explanation:
+            "Đáp án D được chọn vì câu hỏi yêu cầu tìm phương án SAI. Về mặt lý thuyết, định nghĩa B đầy đủ nhất (bao gồm cả 'chi phí').",
+        },
+        {
+          q: "Tổ chức, cá nhân giao kết hợp đồng bảo hiểm và đóng phí bảo hiểm được gọi là:",
+          options: [
+            "Người được bảo hiểm.",
+            "Bên mua bảo hiểm.",
+            "Đại lý bảo hiểm.",
+            "Người thụ hưởng.",
+          ],
+          correct: 1,
+          explanation: "Đây là định nghĩa chuẩn của 'Bên mua bảo hiểm'.",
+        },
+        {
+          q: "Hợp đồng BH nhân thọ bị chấm dứt do không đóng phí có thể được khôi phục trong thời hạn bao lâu?",
+          options: [
+            "02 năm kể từ ngày bị chấm dứt và đóng đủ phí thiếu.",
+            "03 năm kể từ ngày bị chấm dứt và đóng đủ phí thiếu.",
+            "04 năm kể từ ngày bị chấm dứt và đóng đủ phí thiếu.",
+            "Bất kỳ thời điểm nào.",
+          ],
+          correct: 0,
+          explanation:
+            "Thời hạn khôi phục hiệu lực hợp đồng thường là 2 năm (24 tháng) kể từ ngày mất hiệu lực.",
+        },
+        {
+          q: "Bảo hiểm sức khỏe là loại hình bảo hiểm cho trường hợp:",
+          options: [
+            "Sống đến thời hạn nhất định.",
+            "Chết trong thời hạn nhất định.",
+            "Chết vào bất kỳ thời điểm nào.",
+            "Thương tật, tai nạn, ốm đau, bệnh tật hoặc chăm sóc sức khỏe.",
+          ],
+          correct: 3,
+          explanation:
+            "Bảo hiểm sức khỏe tập trung vào tai nạn, ốm đau, bệnh tật, khác với nhân thọ (sống/chết).",
+        },
+        {
+          q: "Phát biểu nào sau đây là SAI về đại lý bảo hiểm:",
+          options: [
+            "Phải thực hiện nghĩa vụ trong hợp đồng đại lý.",
+            "Không được tranh giành khách hàng bất hợp pháp.",
+            "Có thể sử dụng hoa hồng bảo hiểm để giảm phí cho khách hàng.",
+            "Không được xúi giục khách hủy hợp đồng.",
+          ],
+          correct: 2,
+          explanation:
+            "Luật nghiêm cấm đại lý dùng hoa hồng để giảm phí (cắt máu) cho khách hàng.",
+        },
+        {
+          q: "Đại lý bảo hiểm không được giao kết hợp đồng đại lý với:",
+          options: [
+            "Doanh nghiệp bảo hiểm.",
+            "Chi nhánh DNBH phi nhân thọ nước ngoài.",
+            "Tổ chức tương hỗ.",
+            "Văn phòng đại diện của DNBH nước ngoài tại Việt Nam.",
+          ],
+          correct: 3,
+          explanation:
+            "Văn phòng đại diện không có chức năng kinh doanh nên không được ký hợp đồng đại lý.",
+        },
+        {
+          q: "Phát biểu đúng với quyền lợi trợ cấp thu nhập khi thương tật toàn bộ vĩnh viễn:",
+          options: [
+            "Thường gắn với hợp đồng có Bên mua là Người được BH.",
+            "Số tiền trợ cấp tính theo % số tiền bảo hiểm.",
+            "DNBH trả tiền trợ cấp hàng tháng.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 3,
+          explanation:
+            "Đây là đặc điểm của quyền lợi trợ cấp thu nhập (Income Replacement).",
+        },
+        {
+          q: "Trong BH nhân thọ, yếu tố nào của người được bảo hiểm ảnh hưởng đến phí?",
+          options: ["Tuổi.", "Giới tính.", "Nghề nghiệp.", "Cả A, B, C đúng."],
+          correct: 3,
+          explanation:
+            "Cả tuổi, giới tính và nghề nghiệp đều ảnh hưởng trực tiếp đến rủi ro tử vong/thương tật.",
+        },
+        {
+          q: "Trường hợp bên mua cố ý cung cấp thông tin sai để trục lợi, DNBH có quyền:",
+          options: [
+            "Đình chỉ thực hiện và thu phí đến thời điểm phát hiện (không hoàn phí).",
+            "Đình chỉ và hoàn lại phí.",
+            "Chấm dứt hợp đồng.",
+            "Hủy bỏ hợp đồng.",
+          ],
+          correct: 0,
+          explanation:
+            "Đây là chế tài cho hành vi gian dối cố ý: Hợp đồng chấm dứt và DNBH không phải hoàn phí.",
+        },
+        {
+          q: "Loại hình bảo hiểm cho trường hợp người được bảo hiểm sống hoặc chết là:",
+          options: [
+            "Bảo hiểm nhân thọ.",
+            "Bảo hiểm phi nhân thọ.",
+            "Bảo hiểm sức khỏe.",
+            "Bảo hiểm y tế.",
+          ],
+          correct: 0,
+          explanation:
+            "Bảo hiểm nhân thọ bảo hiểm cho rủi ro liên quan đến tuổi thọ (sống/chết) của con người.",
+        },
+        {
+          q: "Quyền lợi miễn thu phí khi bên mua tử vong/thương tật toàn bộ vĩnh viễn là:",
+          options: [
+            "DNBH thay bên mua nộp phí đến hạn, hợp đồng vẫn duy trì.",
+            "DNBH hoàn phí và chấm dứt hợp đồng.",
+            "DNBH trả quyền lợi tử vong và chấm dứt hợp đồng.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 0,
+          explanation:
+            "Miễn thu phí (Waiver of Premium) giúp duy trì hợp đồng cho người được bảo hiểm khi bên mua gặp rủi ro.",
+        },
+        {
+          q: "Doanh nghiệp bảo hiểm có nghĩa vụ:",
+          options: [
+            "Bồi thường, trả tiền bảo hiểm.",
+            "Giải thích bằng văn bản lý do từ chối.",
+            "Cả A, B đúng.",
+          ],
+          correct: 2,
+          explanation:
+            "DNBH phải chi trả khi có sự kiện bảo hiểm hoặc giải thích rõ ràng nếu từ chối.",
+        },
+        {
+          q: "Với BH tử kỳ, nếu người được bảo hiểm sống đến hết thời hạn, DNBH sẽ:",
+          options: [
+            "Chi trả cho người được bảo hiểm.",
+            "Chi trả cho bên mua bảo hiểm.",
+            "Chi trả cho người thụ hưởng.",
+            "Không chi trả tiền bảo hiểm.",
+          ],
+          correct: 3,
+          explanation:
+            "Bảo hiểm tử kỳ chỉ bảo vệ rủi ro tử vong trong thời hạn. Nếu sống qua thời hạn, hợp đồng hết hiệu lực không có giá trị hoàn lại.",
+        },
+        {
+          q: "Đại lý bảo hiểm có nghĩa vụ nào sau đây (chọn phương án chính xác nhất theo đề):",
+          options: [
+            "Hưởng hoa hồng (đây là quyền).",
+            "Cung cấp thông tin cho bên thứ 3 (cấm).",
+            "Không được tự ý kê khai thông tin cho bên mua bảo hiểm.",
+            "Cả A, B, C sai.",
+          ],
+          correct: 2,
+          explanation:
+            "Tuân thủ quy định 'Không được tự ý kê khai thay khách hàng' là một nghĩa vụ bắt buộc.",
+        },
+        {
+          q: "Doanh nghiệp bảo hiểm được chi trả hoa hồng bảo hiểm cho:",
+          options: [
+            "Đại lý bảo hiểm.",
+            "Doanh nghiệp môi giới bảo hiểm.",
+            "Bên mua bảo hiểm.",
+            "Cả Đại lý và Môi giới.",
+          ],
+          correct: 0,
+          explanation:
+            "Thuật ngữ 'Hoa hồng' dành cho Đại lý. Môi giới hưởng 'Phí môi giới'. Bên mua không được nhận.",
+        },
+        {
+          q: "HĐ BH nhân thọ có giá trị hoàn lại, quá hạn đóng phí 60 ngày, DNBH chấm dứt HĐ thì Bên mua được:",
+          options: [
+            "Không đòi lại được phí.",
+            "Nhận lại toàn bộ phí.",
+            "Nhận giá trị hoàn lại (trừ khi có thỏa thuận khác).",
+          ],
+          correct: 2,
+          explanation:
+            "Bên mua sẽ nhận lại Giá trị hoàn lại tích lũy được tại thời điểm chấm dứt (Cash Value).",
+        },
+        {
+          q: "Tham gia BH sức khỏe + quyền lợi tai nạn, được nhận quyền lợi gì?",
+          options: [
+            "Tử vong, thương tật do tai nạn.",
+            "Chi phí y tế điều trị tai nạn.",
+            "Chi phí y tế điều trị ốm đau, bệnh tật.",
+            "A, B đúng.",
+            "A, B, C đúng.",
+          ],
+          correct: 4,
+          explanation:
+            "Được bảo vệ toàn diện: Tai nạn (A, B) và Ốm đau (từ hợp đồng chính Sức khỏe - C).",
+        },
+        {
+          q: "Tham gia BH sức khỏe + quyền lợi tai nạn, quyền lợi bao gồm:",
+          options: [
+            "Thương tật bộ phận vĩnh viễn do tai nạn.",
+            "Trợ cấp mất/giảm thu nhập do tai nạn.",
+            "Thai sản.",
+            "A, B đúng.",
+            "A, B, C đúng.",
+          ],
+          correct: 4,
+          explanation:
+            "Tương tự câu trên, bao gồm quyền lợi tai nạn và quyền lợi sức khỏe (thai sản).",
+        },
+        {
+          q: "Nghĩa vụ của Doanh nghiệp bảo hiểm gồm:",
+          options: [
+            "Giải thích rõ ràng quyền lợi, điều khoản.",
+            "Bồi thường, trả tiền bảo hiểm.",
+            "Giải thích từ chối bằng văn bản.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 3,
+          explanation:
+            "Đây là các nghĩa vụ cơ bản và quan trọng nhất của DNBH.",
+        },
+        {
+          q: "BH Sức khỏe (quyền lợi tai nạn) KHÔNG chi trả trường hợp nào?",
+          options: [
+            "Cố ý gây tai nạn.",
+            "Ảnh hưởng do rượu bia, ma túy.",
+            "Vi phạm tốc độ quy định.",
+            "Tham gia chống hành động phạm pháp (thường được bảo hiểm).",
+            "A, B, C đúng (là các trường hợp loại trừ).",
+          ],
+          correct: 4,
+          explanation:
+            "Cố ý, Rượu bia, Vi phạm luật giao thông là các điều khoản loại trừ phổ biến.",
+        },
+        {
+          q: "Bên mua bảo hiểm có thể mua BH sức khỏe cho ai?",
+          options: [
+            "Người đồng ý bằng văn bản.",
+            "Người thân (vợ/chồng, cha/mẹ, con, anh/chị/em ruột...).",
+            "Người có quyền lợi tài chính.",
+            "Cả A, B, C đúng.",
+          ],
+          correct: 3,
+          explanation:
+            "Bên mua phải có 'Quyền lợi có thể được bảo hiểm' với người được bảo hiểm qua quan hệ huyết thống, hôn nhân, nuôi dưỡng, tài chính hoặc sự đồng ý.",
+        },
+        {
+          q: "Văn phòng đại diện của DNBH nước ngoài ______:",
+          options: [
+            "Không được thực hiện hoạt động kinh doanh bảo hiểm tại Việt Nam.",
+            "Được kinh doanh bảo hiểm.",
+            "Được kinh doanh tái bảo hiểm.",
+            "Được môi giới bảo hiểm.",
+          ],
+          correct: 0,
+          explanation:
+            "Văn phòng đại diện chỉ có chức năng xúc tiến, nghiên cứu thị trường, KHÔNG được kinh doanh.",
+        },
+        {
+          q: "Phí bảo hiểm nhân thọ quá hạn 60 ngày không đóng được thì:",
+          options: [
+            "HĐ chấm dứt, không thể khôi phục.",
+            "HĐ chấm dứt, khôi phục bất kỳ lúc nào.",
+            "HĐ chấm dứt, khôi phục trong 02 năm nếu đóng đủ phí.",
+            "HĐ chấm dứt, khôi phục trong 03 năm.",
+          ],
+          correct: 2,
+          explanation:
+            "Thời gian gia hạn là 60 ngày. Sau đó HĐ mất hiệu lực, có thể khôi phục trong 2 năm.",
+        },
+        {
+          q: "Tỷ lệ hoa hồng đại lý bảo hiểm do ai quy định?",
+          options: [
+            "Doanh nghiệp bảo hiểm.",
+            "Cục Quản lý giám sát bảo hiểm.",
+            "Bộ trưởng Bộ Tài chính.",
+            "Chính phủ.",
+          ],
+          correct: 2,
+          explanation:
+            "Bộ Tài chính ban hành các thông tư quy định mức trần hoa hồng đại lý.",
+        },
+        {
+          q: "Nguyên tắc trung thực tuyệt đối áp dụng cho:",
+          options: [
+            "Chỉ doanh nghiệp bảo hiểm.",
+            "Chỉ bên mua bảo hiểm.",
+            "Cả doanh nghiệp bảo hiểm và bên mua bảo hiểm.",
+          ],
+          correct: 2,
+          explanation:
+            "Cả hai bên đều phải trung thực: Bên mua khai báo thông tin, DNBH tư vấn và giải thích điều khoản.",
+        },
+        {
+          q: "Tổ chức kinh doanh bảo hiểm bao gồm:",
+          options: [
+            "DNBH, tổ chức tương hỗ, chi nhánh DNBH phi nhân thọ nước ngoài.",
+            "DNBH, tổ chức tương hỗ, chi nhánh phi nhân thọ nước ngoài, hợp tác xã bảo hiểm.",
+            "DNBH, chi nhánh phi nhân thọ nước ngoài, hợp tác xã bảo hiểm.",
+          ],
+          correct: 0,
+          explanation:
+            "Theo Luật 2022, tổ chức KDBH gồm DNBH, Chi nhánh nước ngoài (phi nhân thọ), Tổ chức tương hỗ vi mô.",
+        },
+        {
+          q: "Phát biểu SAI về nghĩa vụ đại lý:",
+          options: [
+            "Giới thiệu, chào bán sản phẩm.",
+            "Cung cấp thông tin đầy đủ, chính xác.",
+            "Tự kê khai thông tin cho bên mua mà không cần sự đồng ý.",
+            "Cả A, B đúng (là nghĩa vụ).",
+          ],
+          correct: 2,
+          explanation:
+            "Tự ý kê khai mà không có sự đồng ý của khách hàng là hành vi bị cấm/sai trái.",
+        },
+        {
+          q: "DNBH KHÔNG được đơn phương chấm dứt hợp đồng trong trường hợp nào?",
+          options: [
+            "Thay đổi rủi ro nhưng bên mua không chấp nhận phí mới.",
+            "Bên mua không thực hiện biện pháp an toàn.",
+            "Bên mua không đóng phí.",
+            "Bên mua không đồng ý chuyển giao danh mục hợp đồng bảo hiểm.",
+          ],
+          correct: 3,
+          explanation:
+            "Khi DNBH chuyển giao danh mục (bán lại công ty), hợp đồng của khách hàng tự động chuyển sang công ty mới, DNBH cũ không được chấm dứt HĐ của khách.",
+        },
+        {
+          q: "Phát biểu nào dưới đây là SAI về định nghĩa:",
+          options: [
+            "Doanh nghiệp bảo hiểm gồm Nhân thọ, Phi nhân thọ, Sức khỏe.",
+            "Sự kiện bảo hiểm là sự kiện khách quan.",
+            "Kinh doanh tái bảo hiểm là chấp nhận rủi ro của 'người được bảo hiểm'.",
+          ],
+          correct: 2,
+          explanation:
+            "Kinh doanh Tái bảo hiểm là nhận rủi ro từ 'Doanh nghiệp bảo hiểm khác', không phải trực tiếp từ người được bảo hiểm.",
+        },
+        {
+          q: "Chọn phương án SAI về nghĩa vụ của bên mua bảo hiểm:",
+          options: [
+            "Đóng phí đầy đủ.",
+            "Kê khai trung thực.",
+            "Thông báo tăng rủi ro.",
+            "Lựa chọn doanh nghiệp bảo hiểm có đủ năng lực tài chính.",
+          ],
+          correct: 3,
+          explanation:
+            "Việc chọn DNBH tốt là Quyền của khách hàng, không phải Nghĩa vụ luật định.",
+        },
+      ];
 
-        // 2. Kích hoạt nhạc nền
-        if (audio) {
-          audio.muted = false; // Bật tiếng (Chỉ hoạt động vì người dùng đã tương tác)
-          audio.play().catch((error) => {
-            console.log(
-              "Autoplay or unmute failed, expected in some browsers after user interaction:",
-              error
-            );
-          });
+      // --- GEMINI API HELPER ---
+      async function callGemini(prompt) {
+        if (!apiKey) {
+          alert("Vui lòng nhập API Key trong code để sử dụng tính năng này!");
+          return null;
         }
 
-        // 3. Sau 100ms (sau khi cover bắt đầu ẩn), thêm lớp để hiển thị nội dung chính
-        setTimeout(() => {
-          voucherContainer.classList.add("is-active");
-        }, 100);
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+        };
 
-        // 4. (Tùy chọn) Ẩn hoàn toàn cover sau khi animation kết thúc (1.1 giây)
-        setTimeout(() => {
-          cover.style.display = "none";
-        }, 1100);
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+          const data = await response.json();
+          return (
+            data.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "Không nhận được phản hồi."
+          );
+        } catch (error) {
+          console.error("Gemini Error:", error);
+          return "Đã xảy ra lỗi khi kết nối với AI. Vui lòng kiểm tra API Key hoặc mạng.";
+        }
       }
 
-      // Gán sự kiện cho nút "BẤM ĐỂ MỞ NGAY"
-      openButton.addEventListener("click", revealVoucher);
+      // --- APP LOGIC ---
+      const app = {
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        userAnswers: [],
+        history: JSON.parse(localStorage.getItem("quizHistory")) || [],
 
-      // Cũng có thể cho phép nhấn vào bất kỳ đâu trên cover để mở
-      cover.addEventListener("click", (e) => {
-        // Ngăn chặn việc kích hoạt hai lần nếu nhấn vào nút
-        if (e.target.id !== "open-gift-btn") {
-          revealVoucher();
-        }
-      });
+        init: function () {
+          this.questions = [...rawQuestions];
+          this.renderHistory();
+
+          // Enter to send chat
+          document
+            .getElementById("chat-input")
+            .addEventListener("keypress", function (e) {
+              if (e.key === "Enter") app.sendChatMessage();
+            });
+        },
+
+        startQuiz: function () {
+          this.questions = this.shuffleArray([...rawQuestions]);
+          this.currentIndex = 0;
+          this.score = 0;
+          this.userAnswers = new Array(this.questions.length).fill(null);
+
+          document.getElementById("screen-welcome").classList.add("hidden");
+          document.getElementById("screen-result").classList.add("hidden");
+          document.getElementById("screen-quiz").classList.remove("hidden");
+          document.getElementById("screen-quiz").classList.add("fade-in");
+
+          this.renderQuestion();
+          this.updateProgress();
+        },
+
+        renderQuestion: function () {
+          const q = this.questions[this.currentIndex];
+          document.getElementById("question-text").innerText = `Câu ${
+            this.currentIndex + 1
+          }: ${q.q}`;
+
+          const optionsContainer = document.getElementById("options-container");
+          optionsContainer.innerHTML = "";
+
+          // Reset feedback area
+          const feedbackArea = document.getElementById("feedback-area");
+          feedbackArea.classList.add("hidden");
+
+          // Reset AI section
+          document
+            .getElementById("ai-explanation-content")
+            .classList.add("hidden");
+          document.getElementById("ai-explanation-content").innerHTML = "";
+          document
+            .getElementById("ai-explain-btn-container")
+            .classList.remove("hidden");
+
+          // Disable next button
+          const btnNext = document.getElementById("btn-next");
+          btnNext.disabled = true;
+          btnNext.classList.add(
+            "bg-gray-300",
+            "text-gray-500",
+            "cursor-not-allowed"
+          );
+          btnNext.classList.remove(
+            "bg-blue-600",
+            "text-white",
+            "hover:bg-blue-700"
+          );
+
+          q.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.className =
+              "w-full text-left p-4 rounded-lg border border-gray-200 hover:bg-blue-50 transition duration-200 option-btn group";
+            btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-full bg-gray-100 text-gray-500 text-center text-sm leading-6 mr-3 font-bold group-hover:bg-blue-200 group-hover:text-blue-700">${String.fromCharCode(
+              65 + index
+            )}</span> ${opt}`;
+            btn.onclick = () => this.checkAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+          });
+        },
+
+        checkAnswer: function (selectedIndex, btnElement) {
+          if (this.userAnswers[this.currentIndex] !== null) return;
+
+          const q = this.questions[this.currentIndex];
+          const isCorrect = selectedIndex === q.correct;
+          this.userAnswers[this.currentIndex] = isCorrect ? "correct" : "wrong";
+
+          const options = document.getElementById("options-container").children;
+          for (let i = 0; i < options.length; i++) {
+            options[i].disabled = true;
+            options[i].classList.remove("hover:bg-blue-50");
+            if (i === q.correct) {
+              options[i].classList.add(
+                "bg-green-100",
+                "border-green-500",
+                "text-green-800"
+              );
+              options[i]
+                .querySelector("span")
+                .classList.add("bg-green-500", "text-white");
+            } else if (i === selectedIndex && !isCorrect) {
+              options[i].classList.add(
+                "bg-red-100",
+                "border-red-500",
+                "text-red-800"
+              );
+              options[i]
+                .querySelector("span")
+                .classList.add("bg-red-500", "text-white");
+              btnElement.classList.add("shake");
+            } else {
+              options[i].classList.add("opacity-50");
+            }
+          }
+
+          if (isCorrect) this.score++;
+          this.updateProgress();
+
+          const feedbackArea = document.getElementById("feedback-area");
+          const feedbackHeader = document.getElementById("feedback-header");
+          const feedbackTitle = document.getElementById("feedback-title");
+          const feedbackText = document.getElementById("feedback-text");
+          const feedbackIcon = document.getElementById("feedback-icon");
+
+          feedbackArea.classList.remove("hidden");
+          feedbackArea.classList.add("fade-in");
+
+          feedbackHeader.className = isCorrect
+            ? "p-4 border-l-4 border-green-500 bg-green-50 text-green-800"
+            : "p-4 border-l-4 border-red-500 bg-red-50 text-red-800";
+          feedbackIcon.innerHTML = isCorrect
+            ? '<i class="fas fa-check-circle text-green-600"></i>'
+            : '<i class="fas fa-times-circle text-red-600"></i>';
+          feedbackTitle.innerText = isCorrect ? "Chính xác!" : "Chưa đúng rồi.";
+          feedbackText.innerText =
+            q.explanation || "Không có giải thích chi tiết.";
+
+          const btnNext = document.getElementById("btn-next");
+          btnNext.disabled = false;
+          btnNext.classList.remove(
+            "bg-gray-300",
+            "text-gray-500",
+            "cursor-not-allowed"
+          );
+          btnNext.classList.add(
+            "bg-blue-600",
+            "text-white",
+            "hover:bg-blue-700",
+            "shadow-lg"
+          );
+          btnNext.focus();
+        },
+
+        // --- AI FEATURE: SMART EXPLANATION ---
+        explainWithAI: async function () {
+          const btnContainer = document.getElementById(
+            "ai-explain-btn-container"
+          );
+          const contentDiv = document.getElementById("ai-explanation-content");
+          const q = this.questions[this.currentIndex];
+          const correctAnswerText = q.options[q.correct];
+
+          // UI Loading
+          btnContainer.classList.add("hidden");
+          contentDiv.classList.remove("hidden");
+          contentDiv.innerHTML =
+            '<div class="typing-indicator text-center p-2"><span></span><span></span><span></span></div>';
+
+          const prompt = `Bạn là chuyên gia về Luật Kinh doanh Bảo hiểm Việt Nam (Luật 2022). 
+                Hãy giải thích ngắn gọn, dễ hiểu về câu hỏi sau: "${q.q}".
+                Đáp án đúng là: "${correctAnswerText}".
+                Hãy giải thích tại sao đáp án này đúng dựa trên cơ sở pháp lý và đưa ra một ví dụ thực tế minh họa ngắn gọn.`;
+
+          const result = await callGemini(prompt);
+
+          if (result) {
+            contentDiv.innerHTML = marked.parse(result);
+          } else {
+            btnContainer.classList.remove("hidden"); // Show button again on error
+            contentDiv.classList.add("hidden");
+          }
+        },
+
+        nextQuestion: function () {
+          if (this.currentIndex < this.questions.length - 1) {
+            this.currentIndex++;
+            this.renderQuestion();
+            this.updateProgress();
+          } else {
+            this.finishQuiz();
+          }
+        },
+
+        updateProgress: function () {
+          document.getElementById("question-counter").innerText = `Câu ${
+            this.currentIndex + 1
+          }/${this.questions.length}`;
+          document.getElementById(
+            "score-counter"
+          ).innerText = `Điểm: ${this.score}`;
+          const pct =
+            ((this.currentIndex +
+              (this.userAnswers[this.currentIndex] !== null ? 1 : 0)) /
+              this.questions.length) *
+            100;
+          document.getElementById("progress-bar").style.width = `${pct}%`;
+        },
+
+        finishQuiz: function () {
+          const result = {
+            date: new Date().toLocaleString("vi-VN"),
+            score: this.score,
+            total: this.questions.length,
+            timestamp: Date.now(),
+          };
+          this.history.unshift(result);
+          if (this.history.length > 20) this.history.pop();
+          localStorage.setItem("quizHistory", JSON.stringify(this.history));
+          this.renderHistory();
+
+          document.getElementById("screen-quiz").classList.add("hidden");
+          document.getElementById("screen-result").classList.remove("hidden");
+
+          document.getElementById("final-score").innerText = this.score;
+          document.getElementById("count-correct").innerText = this.score;
+          document.getElementById("count-wrong").innerText =
+            this.questions.length - this.score;
+
+          const percentage = (this.score / this.questions.length) * 100;
+          const msg = document.getElementById("result-message");
+          const sub = document.getElementById("result-submessage");
+          const circle = document.getElementById("score-circle");
+
+          const offset = 283 - (283 * percentage) / 100;
+          setTimeout(() => (circle.style.strokeDashoffset = offset), 100);
+
+          if (percentage === 100) {
+            msg.innerText = "Tuyệt đối! 🏆";
+            sub.innerText = "Bạn đã nắm vững toàn bộ kiến thức.";
+            msg.className = "text-2xl font-bold mb-2 text-yellow-600";
+            circle.setAttribute("stroke", "#ca8a04");
+          } else if (percentage >= 80) {
+            msg.innerText = "Xuất sắc! 🌟";
+            sub.innerText = "Kiến thức của bạn rất vững chắc.";
+            msg.className = "text-2xl font-bold mb-2 text-green-600";
+            circle.setAttribute("stroke", "#16a34a");
+          } else if (percentage >= 50) {
+            msg.innerText = "Khá tốt 👍";
+            sub.innerText = "Cần ôn lại một số câu sai nhé.";
+            msg.className = "text-2xl font-bold mb-2 text-blue-600";
+            circle.setAttribute("stroke", "#2563eb");
+          } else {
+            msg.innerText = "Cố lên! 💪";
+            sub.innerText = "Hãy ôn tập kỹ hơn và thử lại.";
+            msg.className = "text-2xl font-bold mb-2 text-red-600";
+            circle.setAttribute("stroke", "#dc2626");
+          }
+        },
+
+        restartQuiz: function () {
+          this.startQuiz();
+        },
+
+        returnHome: function () {
+          document.getElementById("screen-result").classList.add("hidden");
+          document.getElementById("screen-welcome").classList.remove("hidden");
+        },
+
+        // --- HISTORY & CHAT UI TOGGLES ---
+        toggleHistory: function () {
+          const h = document.getElementById("screen-history");
+          const chat = document.getElementById("screen-chat");
+
+          // Close chat if open
+          if (!chat.classList.contains("translate-y-full")) {
+            chat.classList.add("translate-y-full");
+            setTimeout(() => chat.classList.add("hidden"), 300);
+          }
+
+          if (h.classList.contains("hidden")) {
+            h.classList.remove("hidden");
+            setTimeout(() => h.classList.remove("translate-x-full"), 10);
+          } else {
+            h.classList.add("translate-x-full");
+            setTimeout(() => h.classList.add("hidden"), 300);
+          }
+        },
+
+        toggleChat: function () {
+          const chat = document.getElementById("screen-chat");
+          const history = document.getElementById("screen-history");
+
+          // Close history if open
+          if (!history.classList.contains("translate-x-full")) {
+            history.classList.add("translate-x-full");
+            setTimeout(() => history.classList.add("hidden"), 300);
+          }
+
+          if (chat.classList.contains("hidden")) {
+            chat.classList.remove("hidden");
+            setTimeout(() => chat.classList.remove("translate-y-full"), 10);
+          } else {
+            chat.classList.add("translate-y-full");
+            setTimeout(() => chat.classList.add("hidden"), 300);
+          }
+        },
+
+        // --- AI FEATURE: CHATBOT ---
+        sendChatMessage: async function () {
+          const input = document.getElementById("chat-input");
+          const msg = input.value.trim();
+          if (!msg) return;
+
+          const messagesContainer = document.getElementById("chat-messages");
+
+          // User Message
+          const userDiv = document.createElement("div");
+          userDiv.className = "flex items-end justify-end";
+          userDiv.innerHTML = `<div class="bg-blue-600 text-white rounded-lg rounded-tr-none p-3 max-w-[85%] text-sm">${msg}</div>`;
+          messagesContainer.appendChild(userDiv);
+
+          input.value = "";
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+          // Loading Message
+          const loadingDiv = document.createElement("div");
+          loadingDiv.className = "flex items-start";
+          loadingDiv.id = "chat-loading";
+          loadingDiv.innerHTML = `<div class="bg-gray-200 rounded-lg rounded-tl-none p-3"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+          messagesContainer.appendChild(loadingDiv);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+          // Call AI
+          const prompt = `Bạn là trợ lý ảo chuyên gia về Luật Kinh doanh Bảo hiểm Việt Nam (Luật 2022). Hãy trả lời câu hỏi sau của người dùng một cách chính xác, lịch sự và căn cứ vào luật: "${msg}"`;
+          const reply = await callGemini(prompt);
+
+          // Remove loading
+          loadingDiv.remove();
+
+          // AI Response
+          const aiDiv = document.createElement("div");
+          aiDiv.className = "flex items-start";
+          aiDiv.innerHTML = `<div class="bg-indigo-100 rounded-lg rounded-tl-none p-3 max-w-[85%] text-sm text-gray-800 markdown-body">${
+            reply ? marked.parse(reply) : "Lỗi kết nối."
+          }</div>`;
+          messagesContainer.appendChild(aiDiv);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        },
+
+        clearHistory: function () {
+          if (confirm("Bạn có chắc muốn xóa toàn bộ lịch sử?")) {
+            this.history = [];
+            localStorage.removeItem("quizHistory");
+            this.renderHistory();
+          }
+        },
+
+        renderHistory: function () {
+          const list = document.getElementById("history-list");
+          const chartContainer = document.getElementById(
+            "history-chart-container"
+          );
+          list.innerHTML = "";
+
+          const bars = chartContainer.querySelectorAll(".chart-bar");
+          bars.forEach((b) => b.remove());
+
+          if (this.history.length === 0) {
+            document
+              .getElementById("no-history-msg")
+              .classList.remove("hidden");
+            return;
+          }
+          document.getElementById("no-history-msg").classList.add("hidden");
+
+          this.history.forEach((h, index) => {
+            const li = document.createElement("li");
+            li.className =
+              "bg-white p-3 rounded shadow-sm border border-gray-100 flex justify-between items-center";
+            const pct = Math.round((h.score / h.total) * 100);
+            let colorClass =
+              pct >= 80
+                ? "text-green-600"
+                : pct >= 50
+                ? "text-blue-600"
+                : "text-red-600";
+
+            li.innerHTML = `
+                        <div>
+                            <div class="font-bold text-gray-700">Lần ${
+                              this.history.length - index
+                            }</div>
+                            <div class="text-xs text-gray-400">${h.date}</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xl font-bold ${colorClass}">${
+              h.score
+            }/${h.total}</span>
+                        </div>
+                    `;
+            list.appendChild(li);
+          });
+
+          const chartData = [...this.history].reverse().slice(-10);
+          chartData.forEach((h) => {
+            const pct = (h.score / h.total) * 100;
+            const bar = document.createElement("div");
+            bar.className =
+              "chart-bar w-full bg-blue-500 rounded-t hover:bg-blue-600 transition relative group";
+            bar.style.height = `${pct}%`;
+            bar.style.width = "20px";
+
+            bar.innerHTML = `
+                        <div class="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
+                            ${h.score}/${h.total}
+                        </div>
+                    `;
+
+            if (pct >= 80)
+              bar.classList.add("bg-green-500", "hover:bg-green-600");
+            else if (pct < 50)
+              bar.classList.add("bg-red-400", "hover:bg-red-500");
+            else bar.classList.remove("bg-blue-500");
+
+            chartContainer.appendChild(bar);
+          });
+        },
+
+        shuffleArray: function (array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        },
+      };
+
+      app.init();
     </script>
   </body>
 </html>
