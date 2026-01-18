@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện Thi Luật Kinh Doanh Bảo Hiểm Pro</title>
+    <title>Luyện Thi Luật Kinh Doanh Bảo Hiểm Pro (Shuffle Mode)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -115,11 +115,14 @@
             <div id="screen-welcome" class="absolute inset-0 z-10 bg-white flex flex-col items-center justify-center p-6 text-center animate-fade-in">
                 <div class="w-24 h-24 bg-primary-50 rounded-3xl flex items-center justify-center mb-6 relative">
                     <i class="fas fa-book-reader text-4xl text-primary-600"></i>
+                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                        <i class="fas fa-random text-white text-xs"></i>
+                    </div>
                 </div>
                 
                 <h2 class="text-3xl font-bold text-slate-800 mb-2">Chọn Chế Độ Luyện Tập</h2>
                 <p class="text-slate-500 mb-8 max-w-md mx-auto">
-                    Bạn muốn ôn tập phần kiến thức nào hôm nay?
+                    Câu hỏi và đáp án sẽ được <span class="font-bold text-primary-600">đảo ngẫu nhiên</span> mỗi lần thi.
                 </p>
 
                 <div class="w-full max-w-sm space-y-4">
@@ -294,9 +297,9 @@
 
     <script>
         // --- CONFIG ---
-        const apiKey = "AIzaSyAdAt4T_IVorLjNCRJ_F54ITNce2vLREQc"; // Điền API Key của bạn vào đây
+        const apiKey = "AIzaSyAdAt4T_IVorLjNCRJ_F54ITNce2vLREQc"; // DÁN API KEY CỦA BẠN VÀO ĐÂY
 
-        // --- DATA: THEORY QUESTIONS ---
+        // --- DATA: THEORY QUESTIONS (40 CÂU) ---
         const theoryQuestions = [
             {
                 q: "Theo Luật Kinh doanh bảo hiểm, khi xảy ra sự kiện bảo hiểm, doanh nghiệp bảo hiểm phải bồi thường, trả tiền bảo hiểm trong thời hạn bao lâu (nếu không có thỏa thuận)?",
@@ -477,10 +480,70 @@
                 options: ["Cố ý gây tai nạn.", "Ảnh hưởng do rượu bia, ma túy.", "Vi phạm tốc độ quy định.", "Tham gia chống hành động phạm pháp (thường được bảo hiểm).", "A, B, C đúng (là các trường hợp loại trừ)."],
                 correct: 4,
                 explanation: "Cố ý, Rượu bia, Vi phạm luật giao thông là các điều khoản loại trừ phổ biến."
+            },
+            {
+                q: "Bên mua bảo hiểm có thể mua BH sức khỏe cho ai?",
+                options: ["Người đồng ý bằng văn bản.", "Người thân (vợ/chồng, cha/mẹ, con, anh/chị/em ruột...).", "Người có quyền lợi tài chính.", "Cả A, B, C đúng."],
+                correct: 3,
+                explanation: "Bên mua phải có 'Quyền lợi có thể được bảo hiểm' với người được bảo hiểm qua quan hệ huyết thống, hôn nhân, nuôi dưỡng, tài chính hoặc sự đồng ý."
+            },
+            {
+                q: "Văn phòng đại diện của DNBH nước ngoài ______:",
+                options: ["Không được thực hiện hoạt động kinh doanh bảo hiểm tại Việt Nam.", "Được kinh doanh bảo hiểm.", "Được kinh doanh tái bảo hiểm.", "Được môi giới bảo hiểm."],
+                correct: 0,
+                explanation: "Văn phòng đại diện chỉ có chức năng xúc tiến, nghiên cứu thị trường, KHÔNG được kinh doanh."
+            },
+            {
+                q: "Phí bảo hiểm nhân thọ quá hạn 60 ngày không đóng được thì:",
+                options: ["HĐ chấm dứt, không thể khôi phục.", "HĐ chấm dứt, khôi phục bất kỳ lúc nào.", "HĐ chấm dứt, khôi phục trong 02 năm nếu đóng đủ phí.", "HĐ chấm dứt, khôi phục trong 03 năm."],
+                correct: 2,
+                explanation: "Thời gian gia hạn là 60 ngày. Sau đó HĐ mất hiệu lực, có thể khôi phục trong 2 năm."
+            },
+            {
+                q: "Tỷ lệ hoa hồng đại lý bảo hiểm do ai quy định?",
+                options: ["Doanh nghiệp bảo hiểm.", "Cục Quản lý giám sát bảo hiểm.", "Bộ trưởng Bộ Tài chính.", "Chính phủ."],
+                correct: 2,
+                explanation: "Bộ Tài chính ban hành các thông tư quy định mức trần hoa hồng đại lý."
+            },
+            {
+                q: "Nguyên tắc trung thực tuyệt đối áp dụng cho:",
+                options: ["Chỉ doanh nghiệp bảo hiểm.", "Chỉ bên mua bảo hiểm.", "Cả doanh nghiệp bảo hiểm và bên mua bảo hiểm."],
+                correct: 2,
+                explanation: "Cả hai bên đều phải trung thực: Bên mua khai báo thông tin, DNBH tư vấn và giải thích điều khoản."
+            },
+            {
+                q: "Tổ chức kinh doanh bảo hiểm bao gồm:",
+                options: ["DNBH, tổ chức tương hỗ, chi nhánh DNBH phi nhân thọ nước ngoài.", "DNBH, tổ chức tương hỗ, chi nhánh phi nhân thọ nước ngoài, hợp tác xã bảo hiểm.", "DNBH, chi nhánh phi nhân thọ nước ngoài, hợp tác xã bảo hiểm."],
+                correct: 0,
+                explanation: "Theo Luật 2022, tổ chức KDBH gồm DNBH, Chi nhánh nước ngoài (phi nhân thọ), Tổ chức tương hỗ vi mô."
+            },
+            {
+                q: "Phát biểu SAI về nghĩa vụ đại lý:",
+                options: ["Giới thiệu, chào bán sản phẩm.", "Cung cấp thông tin đầy đủ, chính xác.", "Tự kê khai thông tin cho bên mua mà không cần sự đồng ý.", "Cả A, B đúng (là nghĩa vụ)."],
+                correct: 2,
+                explanation: "Tự ý kê khai mà không có sự đồng ý của khách hàng là hành vi bị cấm/sai trái."
+            },
+            {
+                q: "DNBH KHÔNG được đơn phương chấm dứt hợp đồng trong trường hợp nào?",
+                options: ["Thay đổi rủi ro nhưng bên mua không chấp nhận phí mới.", "Bên mua không thực hiện biện pháp an toàn.", "Bên mua không đóng phí.", "Bên mua không đồng ý chuyển giao danh mục hợp đồng bảo hiểm."],
+                correct: 3,
+                explanation: "Khi DNBH chuyển giao danh mục (bán lại công ty), hợp đồng của khách hàng tự động chuyển sang công ty mới, DNBH cũ không được chấm dứt HĐ của khách."
+            },
+            {
+                q: "Phát biểu nào dưới đây là SAI về định nghĩa:",
+                options: ["Doanh nghiệp bảo hiểm gồm Nhân thọ, Phi nhân thọ, Sức khỏe.", "Sự kiện bảo hiểm là sự kiện khách quan.", "Kinh doanh tái bảo hiểm là chấp nhận rủi ro của 'người được bảo hiểm'."],
+                correct: 2,
+                explanation: "Kinh doanh Tái bảo hiểm là nhận rủi ro từ 'Doanh nghiệp bảo hiểm khác', không phải trực tiếp từ người được bảo hiểm."
+            },
+            {
+                q: "Chọn phương án SAI về nghĩa vụ của bên mua bảo hiểm:",
+                options: ["Đóng phí đầy đủ.", "Kê khai trung thực.", "Thông báo tăng rủi ro.", "Lựa chọn doanh nghiệp bảo hiểm có đủ năng lực tài chính."],
+                correct: 3,
+                explanation: "Việc chọn DNBH tốt là Quyền của khách hàng, không phải Nghĩa vụ luật định."
             }
         ];
 
-        // --- DATA: CALCULATION QUESTIONS ---
+        // --- DATA: CALCULATION QUESTIONS (30 CÂU) ---
         const calculationQuestions = [
             {
                 q: "Ngày 28/02/2000, chị C tham gia HĐBH liên kết chung thời hạn 50 năm, phí định kỳ 100tr/năm, phí đóng thêm năm đầu 500tr. Tỷ lệ phí ban đầu: Cơ bản (N1: 50%, N2: 30%, N3: 20%, N4: 10%, N5-10: 2%); Đóng thêm (N1-4: 2%, N5-10: 0%). Phí rủi ro 260k/tháng, phí QLHĐ 40k/tháng. Lãi suất Quý 1/2000 là 12%/năm. Giá trị tài khoản hợp đồng tại 31/3/2000 là:",
@@ -595,12 +658,34 @@
 
             startQuiz: function(selectedMode) {
                 this.mode = selectedMode;
-                // Load correct dataset
-                if (this.mode === 'calculation') {
-                    this.currentQuestions = this.shuffleArray([...calculationQuestions]);
+                // Deep Copy & Shuffle Questions
+                let sourceData = (this.mode === 'calculation') ? calculationQuestions : theoryQuestions;
+                
+                // Clone deeply to avoid modifying original when shuffling options
+                let questions = JSON.parse(JSON.stringify(sourceData));
+                
+                // 1. Shuffle Order of Questions
+                this.currentQuestions = this.shuffleArray(questions);
+                
+                // 2. Shuffle Options within each Question
+                this.currentQuestions.forEach(q => {
+                    // Create pairs of [optionText, originalIndex]
+                    let mappedOptions = q.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+                    
+                    // Shuffle these pairs
+                    this.shuffleArray(mappedOptions);
+                    
+                    // Update question's options to new shuffled order
+                    q.options = mappedOptions.map(m => m.text);
+                    
+                    // Update 'correct' index to point to where the correct answer moved
+                    // q.correct was the original index (e.g. 1). We look for which item has originalIndex == 1
+                    q.correct = mappedOptions.findIndex(m => m.originalIndex === q.correct);
+                });
+
+                if(this.mode === 'calculation') {
                     document.getElementById('quiz-mode-label').innerText = "Tiến độ (Phần Tính Toán)";
                 } else {
-                    this.currentQuestions = this.shuffleArray([...theoryQuestions]);
                     document.getElementById('quiz-mode-label').innerText = "Tiến độ (Phần Lý Thuyết)";
                 }
 
@@ -772,7 +857,6 @@
                 document.getElementById('final-score').innerText = this.score;
                 document.getElementById('total-questions-label').innerText = `trên ${this.currentQuestions.length} câu`;
                 
-                // Result Message Logic... (Same as before)
                 const percentage = (this.score / this.currentQuestions.length) * 100;
                 const circle = document.getElementById('score-circle');
                 const offset = 283 - (283 * percentage / 100);
@@ -801,7 +885,6 @@
             },
 
             sendChatMessage: async function() {
-                // Chat logic (same as previous version)
                 const input = document.getElementById('chat-input');
                 const msg = input.value.trim();
                 if (!msg) return;
