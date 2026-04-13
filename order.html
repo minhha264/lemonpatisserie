@@ -105,17 +105,20 @@
       .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
       .custom-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
 
-      /* Language Toggle Styles */
+      /* Language Toggle Styles (Đã nâng cấp) */
       .lang-btn {
-        transition: all 0.3s;
-        opacity: 0.5;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0.4;
         filter: grayscale(100%);
+        border: 2px solid transparent;
       }
       .lang-btn.active {
         opacity: 1;
         filter: grayscale(0%);
-        transform: scale(1.1);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transform: scale(1.15);
+        border-color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 10;
       }
     </style>
   </head>
@@ -136,10 +139,14 @@
 
         <!-- Language & Contact Info -->
         <div class="flex items-center space-x-3">
-            <!-- Language Toggle (Flags) -->
-            <div class="flex bg-gray-100 p-1 rounded-full space-x-1">
-                <button onclick="setLang('en')" id="btn-lang-en" class="lang-btn active w-8 h-8 rounded-full flex items-center justify-center bg-white text-lg" title="English">🇬🇧</button>
-                <button onclick="setLang('ru')" id="btn-lang-ru" class="lang-btn w-8 h-8 rounded-full flex items-center justify-center bg-white text-lg" title="Русский">🇷🇺</button>
+            <!-- Language Toggle (Flags bằng hình ảnh thực tế) -->
+            <div class="flex bg-white/60 p-1 rounded-full space-x-1 shadow-inner border border-gray-200">
+                <button onclick="setLang('en')" id="btn-lang-en" class="lang-btn active w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gray-100" title="English">
+                    <img src="https://flagcdn.com/w80/gb.png" alt="EN" class="w-full h-full object-cover">
+                </button>
+                <button onclick="setLang('ru')" id="btn-lang-ru" class="lang-btn w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gray-100" title="Русский">
+                    <img src="https://flagcdn.com/w80/ru.png" alt="RU" class="w-full h-full object-cover">
+                </button>
             </div>
             
             <div class="text-right bg-white/90 px-3 py-1 md:px-4 md:py-1.5 rounded-full shadow-sm border border-blue-100">
@@ -222,7 +229,7 @@
       </div>
     </div>
 
-    <!-- MODAL 2: CHECKOUT FORM (Đã cập nhật Action URL và các Entry ID mới) -->
+    <!-- MODAL 2: CHECKOUT FORM -->
     <div id="checkout-modal" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end md:items-center hidden opacity-0 transition-opacity duration-300">
       <div class="bg-white p-6 rounded-t-3xl md:rounded-3xl w-full max-w-lg shadow-2xl transform translate-y-full md:translate-y-10 transition-transform duration-300 modal-content">
         <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
@@ -291,7 +298,7 @@
               successTitle: "Order Successful!",
               successDesc: "Bon's Tea has received your order and will prepare it right away.",
               btnBack: "Back to Menu",
-              footerAddr: "📍 Address: 123 Giai Khat St, D1, HCMC",
+              footerAddr: "📍 Address: ",
               footerTime: "⏰ Open: 08:00 - 22:00 daily"
           },
           ru: {
