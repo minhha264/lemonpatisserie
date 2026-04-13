@@ -3,835 +3,386 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Menu Đặt Bánh | Lemon Patisserie</title>
-    <!-- Tải Tailwind CSS CDN -->
+    <title>Bon's Tea | Fresh Fruit Tea Order</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tải Font Lobster (cho Tiêu đề) và Montserrat (cho Nội dung) -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&family=Lobster&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts: Pacifico (cho logo/tiêu đề), Nunito (cho nội dung) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Pacifico&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --lemon-yellow: #fde047;
-        --dark-orange: #d97706;
+        --bons-blue: #22d3ee; /* Xanh ngọc mát */
+        --bons-blue-dark: #0284c7; /* Xanh biển sâu */
+        --bons-pink: #ff4d6d; /* Hồng chữ Bon's */
+        --bons-yellow: #fde047;
       }
       body {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 500;
-        background-color: #fef9e7; /* Màu kem nhạt */
-        padding-bottom: 80px; /* Dành chỗ cho sticky footer */
+        font-family: "Nunito", sans-serif;
+        background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #e0f2fe 0%, #38bdf8 100%);
+        background-attachment: fixed;
+        padding-bottom: 120px; /* Tăng khoảng trống để không bị che bởi giỏ hàng */
+        color: #1e293b;
       }
-      /* Áp dụng font Lobster cho tiêu đề lớn */
-      .lobster-font {
-        font-family: "Lobster", cursive;
-        font-weight: 400;
+      .font-bons {
+        font-family: "Pacifico", cursive;
+      }
+      
+      /* Hiệu ứng Text Logo giống ảnh */
+      .text-glow {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
       }
 
-      .lemon-bg {
-        background-color: var(--lemon-yellow);
+      /* Card Sản Phẩm */
+      .product-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 25px rgba(2, 132, 199, 0.15);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+        border: 2px solid white;
+        overflow: hidden;
       }
-      .lemon-text {
-        color: var(--dark-orange);
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 30px rgba(2, 132, 199, 0.25);
       }
-      .cake-card {
-        transition: transform 0.2s, box-shadow 0.2s;
+
+      /* Hình ảnh đồ uống (mô phỏng) */
+      .img-wrapper {
+        height: 180px; /* Thu gọn một chút trên mobile để cân đối hơn */
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: cover;
+        background-position: center;
+        position: relative;
       }
-      .cake-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      @media (min-width: 768px) {
+        .img-wrapper {
+          height: 200px; /* Trả về 200px trên tablet/desktop */
+        }
       }
-      /* Sticky Footer cho Giỏ hàng */
-      #cart-summary {
-        position: fixed;
-        bottom: 0;
+      /* Nước trái cây văng lên (trang trí viền ảnh) */
+      .img-wrapper::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
         left: 0;
         width: 100%;
-        z-index: 40; /* Cao hơn nội dung */
-        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-        display: none; /* Ẩn ban đầu */
-      }
-      /* Modal Styles */
-      .modal {
-        transition: opacity 0.3s ease-in-out;
-        z-index: 50;
-      }
-      .modal.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-      .modal-content {
-        transition: transform 0.3s ease-in-out;
-      }
-      .modal.hidden .modal-content {
-        transform: translateY(20px);
-      }
-      .required-label:after {
-        content: " *";
-        color: red;
-      }
-      /* Custom style cho danh mục (Accordion) */
-      .category-header {
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-      .category-header:hover {
-        background-color: #fef08a; /* yellow-200 */
-      }
-      .category-content.hidden {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-out;
-      }
-      .category-content:not(.hidden) {
-        max-height: 2000px; /* Giá trị lớn để chứa nội dung */
-        transition: max-height 0.7s ease-in;
-      }
-      .arrow-icon {
-        transition: transform 0.3s;
-      }
-      .category-header[aria-expanded="true"] .arrow-icon {
-        transform: rotate(90deg);
-      }
-      /* Sidebar Menu */
-      #sidebar-menu {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 300px;
-        max-width: 80%;
-        height: 100%;
-        background-color: #ffffff;
-        box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
-        z-index: 60;
-        overflow-y: auto;
-      }
-      #sidebar-menu.active {
-        transform: translateX(0);
-      }
-      #sidebar-overlay {
-        position: fixed;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 55;
-        display: none;
-      }
-      #sidebar-overlay.active {
-        display: block;
+        height: 30px;
+        background: rgba(255,255,255,0.95);
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
       }
 
-      /* ----- BACKGROUND ANIMATION (MƯA BÁNH NGỌT) ----- */
+      /* Buttons */
+      .btn-primary {
+        background: linear-gradient(to right, var(--bons-blue-dark), var(--bons-blue));
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: linear-gradient(to right, var(--bons-blue), #7dd3fc);
+      }
+      .btn-minus {
+        border: 2px solid #cbd5e1;
+        color: #64748b;
+      }
+      .btn-minus:hover:not(:disabled) {
+        border-color: var(--bons-pink);
+        color: var(--bons-pink);
+      }
+
+      /* Background Animation (Trái cây rơi) */
       .bg-animated-item {
-        position: fixed; /* Đã sửa thành fixed để hoạt động trên body */
-        top: -10%; /* Bắt đầu từ trên cao */
-        width: 65px;
-        height: 65px;
-        opacity: 0;
-        animation: fall-in-background linear infinite;
+        position: fixed;
+        top: -10%;
+        font-size: 2rem;
         z-index: 0;
         user-select: none;
         pointer-events: none;
+        animation: fall-in-background linear infinite;
+        opacity: 0.7;
       }
-
       @keyframes fall-in-background {
-        0% {
-          transform: translateY(-100%) rotate(0deg);
-          opacity: 0;
-        }
-        10% {
-          opacity: 0.5;
-        }
-        90% {
-          opacity: 0.5;
-        }
-        100% {
-          transform: translateY(110vh) rotate(360deg);
-          opacity: 0;
-        }
+        0% { transform: translateY(-100%) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
       }
 
-      /* Áp dụng styling animation bánh rơi từ index.html */
-      .bg-animated-item:nth-child(1) {
-        left: 10%;
-        animation-duration: 12.5s;
-        animation-delay: 0s;
-        width: 65px;
-        height: 65px;
-      }
-      .bg-animated-item:nth-child(2) {
-        left: 30%;
-        animation-duration: 15s;
-        animation-delay: 2.5s;
-        width: 55px;
-        height: 55px;
-      }
-      .bg-animated-item:nth-child(3) {
-        left: 50%;
-        animation-duration: 10s;
-        animation-delay: 5s;
-        width: 70px;
-        height: 70px;
-      }
-      .bg-animated-item:nth-child(4) {
-        left: 70%;
-        animation-duration: 17.5s;
-        animation-delay: 7.5s;
-        width: 60px;
-        height: 60px;
-      }
-      .bg-animated-item:nth-child(5) {
-        left: 90%;
-        animation-duration: 14s;
-        animation-delay: 10s;
-        width: 75px;
-        height: 75px;
-      }
-      .bg-animated-item:nth-child(6) {
-        left: 5%;
-        animation-duration: 16s;
-        animation-delay: 12.5s;
-        width: 62px;
-        height: 62px;
-      }
-      .bg-animated-item:nth-child(7) {
-        left: 85%;
-        animation-duration: 13s;
-        animation-delay: 15s;
-        width: 68px;
-        height: 68px;
-      }
-      .bg-animated-item:nth-child(8) {
-        left: 45%;
-        animation-duration: 19s;
-        animation-delay: 17.5s;
-        width: 58px;
-        height: 58px;
-      }
-      .bg-animated-item:nth-child(9) {
-        left: 20%;
-        animation-duration: 11s;
-        animation-delay: 1s;
-        width: 65px;
-        height: 65px;
-      }
-      .bg-animated-item:nth-child(10) {
-        left: 40%;
-        animation-duration: 15.5s;
-        animation-delay: 3.5s;
-        width: 55px;
-        height: 55px;
-      }
-      .bg-animated-item:nth-child(11) {
-        left: 60%;
-        animation-duration: 12s;
-        animation-delay: 6s;
-        width: 70px;
-        height: 70px;
-      }
-      .bg-animated-item:nth-child(12) {
-        left: 80%;
-        animation-duration: 18s;
-        animation-delay: 8.5s;
-        width: 60px;
-        height: 60px;
-      }
-      .bg-animated-item:nth-child(13) {
-        left: 15%;
-        animation-duration: 14.5s;
-        animation-delay: 11s;
-        width: 75px;
-        height: 75px;
-      }
-      .bg-animated-item:nth-child(14) {
-        left: 25%;
-        animation-duration: 16.5s;
-        animation-delay: 13.5s;
-        width: 62px;
-        height: 62px;
-      }
-      .bg-animated-item:nth-child(15) {
-        left: 55%;
-        animation-duration: 13.5s;
-        animation-delay: 16s;
-        width: 68px;
-        height: 68px;
-      }
-      .bg-animated-item:nth-child(16) {
-        left: 75%;
-        animation-duration: 17s;
-        animation-delay: 18.5s;
-        width: 58px;
-        height: 58px;
-      }
-
-      /* Căn chỉnh Review Modal Items */
-      .review-item {
-        display: grid;
-        grid-template-columns: 1fr 50px 80px; /* Tên | SL | Giá */
-        align-items: center;
-        border-bottom: 1px solid #f3f4f6;
-        padding-bottom: 8px;
-      }
-      .review-item:last-child {
-        border-bottom: none;
-      }
-      .review-quantity {
-        justify-self: center; /* Căn giữa cột số lượng */
-      }
-      .review-price {
-        justify-self: end; /* Căn phải cột giá */
-      }
-
-      /* Tăng kích thước ảnh bánh và responsive */
-      .cake-img {
-        width: 144px; /* w-36 */
-        height: 144px; /* h-36 */
-        object-fit: contain; /* Đảm bảo ảnh không bị cắt xén */
-        border-radius: 8px;
-      }
-      .cake-card {
-        width: 100%; /* Đảm bảo card rộng hết cột */
-      }
+      /* Custom Scrollbar cho Modal */
+      .custom-scroll::-webkit-scrollbar { width: 6px; }
+      .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+      .custom-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
     </style>
   </head>
   <body>
-    <!-- ------------------------------------------------------------------ -->
-    <!-- NHẠC NỀN (BACKGROUND MUSIC) -->
-    <!-- Thêm thẻ audio với autoplay, loop và MUTED (bắt buộc do trình duyệt) -->
-    <audio id="background-music" loop muted autoplay>
-      <!-- SỬ DỤNG ĐƯỜNG DẪN TỪ INDEX.HTML (aaab.m4a) -->
-      <source src="aaab.m4a" type="audio/mp4" />
-      Trình duyệt của bạn không hỗ trợ phần tử audio.
-    </audio>
-    <!-- ------------------------------------------------------------------ -->
-
-    <!-- BACKGROUND ANIMATION (MƯA BÁNH NGỌT) -->
-    <div id="background-animation-container">
-      <!-- 16 icon bánh ngọt với kích thước và đường dẫn placeholder mới -->
-      <img
-        class="bg-animated-item"
-        src="images/icon1.png"
-        alt="Bánh ngọt rơi"
-      />
-      <img
-        class="bg-animated-item"
-        src="images/icon2.png"
-        alt="Bánh ngọt rơi"
-      />
-      <img class="bg-animated-item" src="images/3.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/4.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/5.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/6.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/7.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/8.png" alt="Bánh ngọt rơi" />
-      <img
-        class="bg-animated-item"
-        src="images/icon2.png"
-        alt="Bánh ngọt rơi"
-      />
-      <img
-        class="bg-animated-item"
-        src="images/icon1.png"
-        alt="Bánh ngọt rơi"
-      />
-      <img class="bg-animated-item" src="images/3.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/4.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/6.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/5.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/8.png" alt="Bánh ngọt rơi" />
-      <img class="bg-animated-item" src="images/7.png" alt="Bánh ngọt rơi" />
-    </div>
+    <!-- BACKGROUND ANIMATION: Sinh ra bằng JS -->
+    <div id="background-animation-container"></div>
 
     <!-- HEADER -->
-    <header class="lemon-bg sticky top-0 z-30 shadow-md">
-      <div class="max-w-4xl mx-auto p-4 flex justify-between items-center">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/50">
+      <div class="max-w-4xl mx-auto px-4 py-2 md:py-3 flex justify-between items-center">
         <!-- Logo Text -->
-        <h1 class="text-3xl font-black text-gray-900 lobster-font">
-          Lemon <span class="lemon-text">Patisserie</span>
-        </h1>
+        <div class="flex flex-col">
+          <h1 class="text-2xl md:text-3xl font-bons text-glow">
+            <span class="text-[#4cc9f0]">Bon's</span> 
+            <span class="text-pink-400">Tea</span>
+          </h1>
+        </div>
 
-        <!-- Icon Menu (3 gạch) -->
-        <button
-          id="menu-toggle-btn"
-          class="p-2 rounded-full hover:bg-yellow-300 transition"
-          aria-label="Mở menu điều hướng"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-gray-800"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+        <!-- Contact Info -->
+        <div class="text-right bg-white/90 px-3 py-1 md:px-4 md:py-1.5 rounded-full shadow-sm border border-blue-100">
+            <p class="text-[9px] md:text-[10px] font-black text-gray-400 tracking-wider">ORDER NOW</p>
+            <p class="text-blue-600 font-black text-xs md:text-sm">0936 558 097</p>
+        </div>
       </div>
     </header>
 
-    <!-- SIDEBAR MENU (Điều hướng danh mục) -->
-    <div id="sidebar-overlay"></div>
-    <div id="sidebar-menu" class="p-4">
-      <h3 class="text-2xl font-black mb-6 pb-2 border-b-2">Danh Mục Bánh</h3>
-      <ul id="sidebar-category-list" class="space-y-3">
-        <li>
-          <a href="#Eclair" class="block p-2 rounded hover:bg-gray-100"
-            >Eclair</a
-          >
-        </li>
-        <li>
-          <a
-            href="#Birthday-Little-Cake"
-            class="block p-2 rounded hover:bg-gray-100"
-            >Birthday Little Cake</a
-          >
-        </li>
-        <li>
-          <a
-            href="#Brownie-Cookie-cheese-Cake"
-            class="block p-2 rounded hover:bg-gray-100"
-            >Brownie Cookie cheese Cake</a
-          >
-        </li>
-        <li>
-          <a href="#Tiramisu" class="block p-2 rounded hover:bg-gray-100"
-            >Tiramisu</a
-          >
-        </li>
-        <li>
-          <a href="#Clafoutis" class="block p-2 rounded hover:bg-gray-100"
-            >Clafoutis</a
-          >
-        </li>
-        <li>
-          <a href="#Bánh-mỳ-ngọt" class="block p-2 rounded hover:bg-gray-100"
-            >Bánh mỳ ngọt</a
-          >
-        </li>
-        <li>
-          <a
-            href="#Bánh-cho-sức-khỏe"
-            class="block p-2 rounded hover:bg-gray-100"
-            >Bánh cho sức khỏe</a
-          >
-        </li>
-        <li>
-          <a href="#Canelé" class="block p-2 rounded hover:bg-gray-100"
-            >Canelé</a
-          >
-        </li>
-        <li>
-          <a href="#Lava-Cake" class="block p-2 rounded hover:bg-gray-100"
-            >Lava Cake</a
-          >
-        </li>
-        <li>
-          <a href="#Cannoli" class="block p-2 rounded hover:bg-gray-100"
-            >Cannoli</a
-          >
-        </li>
-        <!-- Thêm link về trang chủ/voucher -->
-        <li class="pt-4 border-t mt-4">
-          <a
-            href="index.html"
-            class="block p-2 rounded bg-yellow-100 text-gray-800 font-bold hover:bg-yellow-200 transition"
-            >← Về trang Voucher</a
-          >
-        </li>
-      </ul>
+    <!-- BANNER HERO (Bám sát thiết kế text trên ảnh) -->
+    <div class="max-w-4xl mx-auto px-4 mt-4 md:mt-6 mb-6 md:mb-8 relative z-10 text-center">
+        <h2 class="text-4xl md:text-6xl text-white font-bons mb-2 rotate-[-3deg] drop-shadow-md">Fresh Fruit Tea!</h2>
+        <div class="inline-block bg-white/90 backdrop-blur px-4 py-1.5 md:px-6 md:py-2 rounded-full shadow-lg border-2 border-white transform rotate-[2deg] mt-2 md:mt-4">
+            <span class="text-lg md:text-xl font-black text-[#0284c7]">All flavors only</span> 
+            <span class="text-xl md:text-2xl font-black text-pink-500 ml-1">$45K!</span>
+        </div>
+        <br>
+        <p class="mt-3 text-white font-bold text-xs md:text-sm bg-black/20 inline-block px-4 py-1 rounded-full backdrop-blur-sm">Limited Time Offer</p>
     </div>
 
     <!-- MAIN MENU CONTENT -->
-    <main class="max-w-4xl mx-auto p-4 pt-8 relative z-10">
-      <!-- Đã thêm relative z-10 để nội dung nằm trên animation -->
-      <h2
-        class="text-3xl font-extrabold text-gray-800 mb-6 text-center lobster-font"
-      >
-        Chọn Bánh Ngọt Yêu Thích
-      </h2>
-
-      <!-- Menu sẽ được render vào đây -->
-      <div id="menu-container" class="space-y-4">
-        <!-- Menu Categories Rendered Here -->
+    <main class="max-w-4xl mx-auto px-4 relative z-10">
+      <!-- Vùng chứa danh sách sản phẩm -->
+      <div id="menu-container" class="space-y-8 md:space-y-10">
+        <!-- JS sẽ render HTML vào đây -->
       </div>
     </main>
 
-    <!-- STICKY FOOTER - CART SUMMARY -->
-    <div id="cart-summary" class="bg-white p-3">
-      <div
-        class="max-w-4xl mx-auto flex justify-between items-center text-gray-800"
-      >
-        <!-- Giỏ hàng và tổng tiền -->
-        <div class="flex items-center space-x-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 lemon-text"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-          <span id="cart-item-count" class="font-bold text-lg">0</span>
-          <span class="text-sm">món | Tổng:</span>
-          <span id="cart-total" class="font-black text-xl lemon-text">0 đ</span>
+    <!-- FOOTER THÔNG TIN -->
+    <footer class="max-w-4xl mx-auto px-4 mt-10 mb-8 relative z-10 text-center text-gray-700">
+      <div class="bg-white/60 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/60">
+        <h4 class="font-bons text-2xl text-[#0284c7] mb-3">Bon's Tea</h4>
+        <div class="space-y-1 text-sm font-semibold">
+          <p>📍 Địa chỉ: 123 Đường Giải Khát, Quận 1, TP. HCM</p>
+          <p>📞 Zalo / Hotline: 0936 558 097</p>
+          <p>⏰ Mở cửa: 08:00 - 22:00 hằng ngày</p>
         </div>
+        <div class="mt-4 pt-4 border-t border-gray-300/50 text-xs text-gray-500">
+          &copy; 2026 Bon's Tea. All rights reserved.
+        </div>
+      </div>
+    </footer>
 
-        <!-- Nút Xác nhận đơn hàng (BƯỚC 1: REVIEW) -->
-        <button
-          id="checkout-btn"
-          class="lemon-bg text-gray-900 font-bold py-2 px-6 rounded-full shadow-lg hover:bg-yellow-500 transition disabled:opacity-50"
-          disabled
-        >
-          Xác Nhận Đơn Hàng
+    <!-- STICKY FOOTER (GIỎ HÀNG) -->
+    <div id="cart-summary" class="fixed bottom-0 left-0 w-full bg-white z-40 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] hidden rounded-t-3xl transition-transform duration-300 transform translate-y-full">
+      <div class="max-w-4xl mx-auto p-3 md:p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2 md:space-x-3">
+          <div class="relative">
+              <div class="bg-blue-100 p-2 md:p-3 rounded-full text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+              </div>
+              <span id="cart-item-count" class="absolute -top-1 -right-1 bg-pink-500 text-white w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full text-[10px] md:text-xs font-bold border-2 border-white">0</span>
+          </div>
+          <div>
+              <p class="text-[10px] md:text-xs font-bold text-gray-500">Tạm tính</p>
+              <p id="cart-total" class="font-black text-lg md:text-xl text-[#0284c7]">0 đ</p>
+          </div>
+        </div>
+        <button id="checkout-btn" class="btn-primary py-2.5 px-6 md:py-3 md:px-8 rounded-full font-bold uppercase tracking-wide text-sm md:text-base">
+          Tiếp tục 🚀
         </button>
       </div>
     </div>
 
-    <!-- MODAL REVIEW ĐƠN HÀNG (BƯỚC 1) -->
-    <div
-      id="review-modal"
-      class="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 hidden"
-    >
-      <div
-        class="modal-content bg-white p-6 rounded-xl w-full max-w-lg shadow-2xl"
-      >
-        <h3 class="text-2xl font-black mb-4 border-b pb-2 text-gray-800">
-          🛒 Review Đơn Hàng Của Bạn
-        </h3>
-        <div id="review-items" class="space-y-3 max-h-60 overflow-y-auto mb-4">
-          <!-- Chi tiết đơn hàng sẽ hiển thị tại đây -->
+    <!-- MODAL 1: REVIEW ĐƠN HÀNG -->
+    <div id="review-modal" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end md:items-center hidden opacity-0 transition-opacity duration-300">
+      <div class="bg-white p-6 rounded-t-3xl md:rounded-3xl w-full max-w-lg shadow-2xl transform translate-y-full md:translate-y-10 transition-transform duration-300 modal-content">
+        <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+            <h3 class="text-2xl font-black text-gray-800 font-bons tracking-wide">Giỏ Hàng Của Bạn</h3>
+            <button class="close-modal-btn text-gray-400 hover:text-red-500 bg-gray-100 p-2 rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-        <div class="text-right font-black text-xl mb-4 pt-2 border-t">
-          Tổng cộng: <span id="review-total" class="lemon-text">0 đ</span>
+        
+        <div id="review-items" class="space-y-3 max-h-[40vh] overflow-y-auto custom-scroll pr-2 mb-4">
+          <!-- Chi tiết đơn hàng -->
         </div>
-        <div class="flex justify-end space-x-3 pt-2">
-          <button
-            type="button"
-            id="close-review-modal-btn"
-            class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition"
-          >
-            Hủy
-          </button>
-          <button
-            type="button"
-            id="confirm-review-btn"
-            class="px-4 py-2 lemon-bg text-gray-900 rounded-full font-bold hover:bg-yellow-500 transition"
-          >
-            Xác Nhận & Tiếp Tục
-          </button>
+        
+        <div class="bg-blue-50 p-4 rounded-2xl mb-4 flex justify-between items-center">
+            <span class="font-bold text-blue-900">Tổng cộng:</span>
+            <span id="review-total" class="text-2xl font-black text-pink-500">0 đ</span>
         </div>
+
+        <button id="confirm-review-btn" class="w-full btn-primary py-4 rounded-xl font-bold uppercase text-lg shadow-lg">
+            Xác Nhận Đặt Nước
+        </button>
       </div>
     </div>
 
-    <!-- MODAL ĐẶT HÀNG (BƯỚC 2: THÔNG TIN GIAO HÀNG) -->
-    <div
-      id="checkout-modal"
-      class="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 hidden"
-    >
-      <div
-        class="modal-content bg-white p-6 rounded-xl w-full max-w-lg shadow-2xl"
-      >
-        <h3 class="text-2xl font-black mb-4 border-b pb-2 text-gray-800">
-          📝 Thông Tin Giao Hàng
-        </h3>
-        <!-- THAY ĐỔI: SỬ DỤNG CẤU TRÚC SUBMIT QUA IFRAME (GIỐNG FILE INDEX KHÁCH SẠN) -->
-        <form
-          action="https://docs.google.com/forms/d/e/1FAIpQLSeRE1L4khNvvBefgmuGiMlMPkUAIqhjatBvZgR79TYGR3DUIQ/viewform"
-          method="POST"
-          target="hidden_iframe"
-          id="order-form"
-          onsubmit="handleFormSubmit();"
-          class="space-y-4"
-        >
+    <!-- MODAL 2: THÔNG TIN GIAO HÀNG (GIỮ NGUYÊN FORM GỐC) -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end md:items-center hidden opacity-0 transition-opacity duration-300">
+      <div class="bg-white p-6 rounded-t-3xl md:rounded-3xl w-full max-w-lg shadow-2xl transform translate-y-full md:translate-y-10 transition-transform duration-300 modal-content">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+            <h3 class="text-xl font-black text-gray-800">🛵 Thông Tin Nhận Hàng</h3>
+            <button class="close-modal-btn text-gray-400 hover:text-red-500 bg-gray-100 p-2 rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSeRE1L4khNvvBefgmuGiMlMPkUAIqhjatBvZgR79TYGR3DUIQ/viewform" method="POST" target="hidden_iframe" id="order-form" onsubmit="handleFormSubmit();" class="space-y-3 custom-scroll max-h-[60vh] overflow-y-auto pr-2 pb-2">
+          
           <div>
-            <label for="name" class="block text-sm required-label"
-              >Tên Người Nhận</label
-            >
-            <input
-              type="text"
-              name="entry.1619499376"
-              id="name"
-              required
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            />
+            <label class="block text-sm font-bold text-gray-700 mb-1">Tên của bạn <span class="text-red-500">*</span></label>
+            <input type="text" name="entry.1619499376" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label for="address" class="block text-sm required-label"
-              >Địa Chỉ Chi Tiết (Ví dụ: Số nhà, đường, quận, Hà Nội)</label
-            >
-            <input
-              type="text"
-              name="entry.1438297676"
-              id="address"
-              required
-              placeholder="Nhập địa chỉ của bạn"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            />
+            <label class="block text-sm font-bold text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+            <input type="tel" name="entry.371112576" required pattern="[0-9]{9,12}" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label for="phone" class="block text-sm required-label"
-              >Số Điện Thoại</label
-            >
-            <input
-              type="text"
-              name="entry.371112576"
-              id="phone"
-              required
-              pattern="[0-9]{9,12}"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            />
+            <label class="block text-sm font-bold text-gray-700 mb-1">Địa chỉ nhận (Quận/Đường/Số nhà) <span class="text-red-500">*</span></label>
+            <input type="text" name="entry.1438297676" required placeholder="Nhập địa chỉ chi tiết" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label for="note" class="block text-sm">Ghi Chú (Tùy chọn)</label>
-            <textarea
-              name="entry.1656248315"
-              id="note"
-              rows="3"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            ></textarea>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Ghi chú thêm (Đá/Đường/Trân châu...)</label>
+            <textarea name="entry.1656248315" rows="2" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition"></textarea>
           </div>
 
-          <!-- Trường ẩn chứa chi tiết đơn hàng (Giỏ hàng) -->
-          <input
-            type="hidden"
-            id="cart-details-input"
-            name="entry.344338516"
-            value=""
-          />
-          <!-- Trường ẩn chứa tổng tiền -->
-          <input
-            type="hidden"
-            id="total-amount-input"
-            name="entry.1950152427"
-            value=""
-          />
+          <!-- Các trường ẩn chứa data giỏ hàng (Ánh xạ chuẩn từ code gốc) -->
+          <input type="hidden" id="cart-details-input" name="entry.344338516" value="" />
+          <input type="hidden" id="total-amount-input" name="entry.1950152427" value="" />
 
-          <div class="flex justify-end space-x-3 pt-2">
-            <button
-              type="button"
-              id="close-checkout-modal-btn"
-              class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition"
-            >
-              Quay lại
-            </button>
-            <button
-              type="submit"
-              class="px-4 py-2 lemon-bg rounded-full font-bold hover:bg-yellow-500 transition"
-            >
-              HOÀN TẤT ĐẶT BÁNH
-            </button>
-          </div>
+          <button type="submit" class="w-full btn-primary py-4 mt-2 rounded-xl font-bold uppercase tracking-wide text-lg">
+            Hoàn tất đặt đơn 🍹
+          </button>
         </form>
       </div>
     </div>
 
-    <!-- IFRAME ẨN DÙNG ĐỂ GỬI DỮ LIỆU ĐẾN GOOGLE FORM (GIỐNG MÔ HÌNH KHÁCH SẠN) -->
-    <iframe
-      name="hidden_iframe"
-      id="hidden_iframe"
-      style="display: none"
-      onload="if(window.submitted) { showSubmissionSuccess(); }"
-    ></iframe>
+    <!-- IFRAME DÙNG ĐỂ GỬI DATA NGẦM -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display: none" onload="if(window.submitted) { showSubmissionSuccess(); }"></iframe>
 
     <script>
-      let submitted = false; // Biến toàn cục để iframe có thể truy cập
+      let submitted = false;
+      const DEFAULT_PRICE = 45000;
+      let cart = {}; 
 
-      // Dữ liệu Menu (ĐÃ CẬP NHẬT để chứa đường dẫn ảnh)
+      // Dữ liệu sản phẩm bám sát Flyer
       const menuData = {
-        Eclair: [
-          { name: "Hồng trà", imageSrc: "images/eclair/1.png" },
-          { name: "Chuối nướng", imageSrc: "images/eclair/2.png" },
-          { name: "Matcha", imageSrc: "images/eclair/3.png" },
-          { name: "Truyền thống", imageSrc: "images/eclair/4.png" },
-          { name: "Tiramisu", imageSrc: "images/eclair/5.png" },
-          { name: "Chanh kem", imageSrc: "images/eclair/6.png" },
-          { name: "Socola", imageSrc: "images/eclair/7.png" },
-          { name: "Caramel Ganache", imageSrc: "images/eclair/8.png" },
-          { name: "Sầu riêng", imageSrc: "images/eclair/3.png" },
-          {
-            name: "Red velvet Cream Cheese",
-            imageSrc: "images/eclair/2.png",
+        "Menu Trà Trái Cây Tươi": [
+          { 
+              name: "Pineapple Mint", 
+              desc: "Dứa tươi dầm, chanh & lá bạc hà thanh mát.", 
+              color: "#fde047", // Vàng dứa
+              imgCode: "🍍🍃"
           },
-        ],
-        "Birthday Little Cake": [
-          { name: "Carrot Cake", imageSrc: "images/blc/2.png" },
-          {
-            name: "Red velvet Cream Cheese",
-            imageSrc: "images/blc/3.png",
+          { 
+              name: "Passion Orange Lime", 
+              desc: "Sự kết hợp bùng nổ của Cam vàng Úc, Chanh dây & Tắc.", 
+              color: "#f97316", // Cam
+              imgCode: "🍊🍋"
           },
-          {
-            name: "Choco Pie Marshmallow",
-            imageSrc: "images/blc/4.pngg",
-          },
+          { 
+              name: "Watermelon Lime", 
+              desc: "Dưa hấu đỏ mọng nước giải nhiệt cùng chanh tươi.", 
+              color: "#fb7185", // Đỏ hồng dưa hấu
+              imgCode: "🍉🍋"
+          }
         ],
-        "Brownie Cookie cheese Cake": [
-          { name: "Coffee", imageSrc: "images/bccc/1.png" },
-          { name: "Vanilla", imageSrc: "images/bccc/2.png" },
-        ],
-        Tiramisu: [
-          { name: "Truyền thống", imageSrc: "images/tiramisu/1.png" },
-          { name: "Chanh", imageSrc: "images/tiramisu/1.png" },
-        ],
-        Clafoutis: [
-          { name: "Táo quế", imageSrc: "images/clafoutis/1.png" },
-          { name: "Nho", imageSrc: "images/clafoutis/2.png" },
-          { name: "Socola dâu", imageSrc: "images/clafoutis/3.png" },
-        ],
-        "Bánh mỳ ngọt": [
-          { name: "Bánh bơ chanh", imageSrc: "images/bmn/1.png" },
-          {
-            name: "Bánh chuối yến mạch",
-            imageSrc: "iimages/bmn/2.png",
-          },
-          { name: "Bánh Socola Walnut", imageSrc: "images/bmn/3.png" },
-        ],
-        "Bánh cho sức khỏe": [
-          { name: "Cà rốt Cream Cheese", imageSrc: "images/bcsk/1.png" },
-          { name: "Bí đỏ Cream Cheese", imageSrc: "images/bcsk/2.png" },
-        ],
-        Canelé: [
-          { name: "Chanh Kem", imageSrc: "images/canele/1.png" },
-          { name: "Cream Cheese", imageSrc: "images/canele/2.png" },
-          { name: "Tiramisu Oreo", imageSrc: "images/canele/3.png" },
-          { name: "Socola Chips", imageSrc: "images/canele/4.pngg" },
-          { name: "Socola Crumbles", imageSrc: "images/canele/5.png" },
-          { name: "Matcha", imageSrc: "images/canele/6.png" },
-        ],
-        "Lava Cake": [
-          { name: "Socola", imageSrc: "images/lc/1.png" },
-          { name: "Socola Dâu", imageSrc: "images/lc/2.png" },
-          { name: "Matcha", imageSrc: "images/lc/3.png" },
-        ],
-        Cannoli: [
-          { name: "Vanilla", imageSrc: "images/cnl/1.png" },
-          { name: "Tiramisu", imageSrc: "images/cnl/2.png" },
-          { name: "Chanh Kem", imageSrc: "images/cnl/3.png" },
-          { name: "Chuối Rum nướng", imageSrc: "images/cnl/4.png" },
-          { name: "Socola", imageSrc: "images/cnl/5.png" },
-          { name: "Matcha", imageSrc: "images/cnl/6.png" },
-        ],
+        "Menu Thảo Mộc (Gợi ý)": [
+          { name: "Trà Đào Cam Sả", desc: "Đào miếng giòn rụm, hương sả thơm nồng.", color: "#fcd34d", imgCode: "🍑🌿" },
+          { name: "Trà Vải Lài", desc: "Vải thiều ngọt lịm kết hợp hoa lài thơm dịu.", color: "#fbcfe8", imgCode: "🌸🍒" }
+        ]
       };
 
-      // Google Form Target Configuration (ĐÃ CẬP NHẬT entry IDs)
-      // KHÔNG CẦN DÙNG GOOGLE_FORM_URL KHI SỬ DỤNG IFRAME SUBMIT
-      // const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeRE1L4khNvvBefgmuGiMlMPkUAIqhjatBvZgR79TYGR3DUIQ/formResponse";
+      // --- Logic Khởi Tạo Hoạt Ảnh ---
+      function createBackgroundAnimation() {
+        const container = document.getElementById('background-animation-container');
+        const fruits = ['🍋', '🍉', '🍃', '🍊', '🧊'];
+        for(let i = 0; i < 20; i++) {
+            let item = document.createElement('div');
+            item.className = 'bg-animated-item';
+            item.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+            item.style.left = `${Math.random() * 100}%`;
+            item.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            item.style.animationDelay = `${Math.random() * 5}s`;
+            item.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+            container.appendChild(item);
+        }
+      }
 
-      // CÁC ID ĐÃ ĐƯỢC CẬP NHẬT THEO YÊU CẦU MỚI NHẤT
-      const FORM_FIELD_MAPPING = {
-        name: "entry.1619499376", // Tên người nhận
-        address: "entry.1438297676", // Địa chỉ giao hàng (Input Text)
-        phone: "entry.371112576", // Số điện thoại
-        note: "entry.1656248315", // Ghi chú
-        cartDetails: "entry.344338516", // Order (Chi tiết đơn hàng)
-        totalAmount: "entry.1950152427", // Tổng tiền (Giữ lại ID cũ cho trường ẩn)
-      };
-
-      // Giỏ hàng (State Management)
-      let cart = {}; // { itemName: { quantity: N, price: P, category: C } }
-      const DEFAULT_PRICE = 55000; // Giá placeholder: 55,000 VNĐ
-
-      // DOM Elements
-      const audio = document.getElementById("background-music");
-      const menuContainer = document.getElementById("menu-container");
-      const cartSummary = document.getElementById("cart-summary");
-      const cartItemCount = document.getElementById("cart-item-count");
-      const cartTotal = document.getElementById("cart-total");
-      const checkoutBtn = document.getElementById("checkout-btn");
-
-      const reviewModal = document.getElementById("review-modal");
-      const reviewItemsDiv = document.getElementById("review-items");
-      const reviewTotalSpan = document.getElementById("review-total");
-      const closeReviewModalBtn = document.getElementById(
-        "close-review-modal-btn"
-      );
-      const confirmReviewBtn = document.getElementById("confirm-review-btn");
-
-      const checkoutModal = document.getElementById("checkout-modal");
-      const closeCheckoutModalBtn = document.getElementById(
-        "close-checkout-modal-btn"
-      );
-      const orderForm = document.getElementById("order-form");
-      const cartDetailsInput = document.getElementById("cart-details-input");
-      const totalAmountInput = document.getElementById("total-amount-input");
-
-      /**
-       * Format số thành đơn vị tiền tệ VNĐ.
-       */
+      // --- Logic Tiền Tệ ---
       function formatCurrency(number) {
         return number.toLocaleString("vi-VN") + " đ";
       }
 
-      /**
-       * Hiển thị modal thành công sau khi iframe load (Gửi form thành công)
-       */
-      function showSubmissionSuccess() {
-        // Chỉ xử lý nếu cờ submitted được đặt là true
-        if (!window.submitted) return;
+      // --- Logic Render UI Menu ---
+      function renderMenu() {
+        const container = document.getElementById("menu-container");
+        container.innerHTML = "";
 
-        hideModal(checkoutModal);
+        for (const category in menuData) {
+          const items = menuData[category];
+          let categoryHtml = `
+            <section class="mb-8">
+              <h3 class="text-2xl font-black text-[#0284c7] mb-4 bg-white/70 backdrop-blur-sm inline-block px-4 py-2 rounded-2xl shadow-sm border border-white">
+                ${category}
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          `;
 
-        // Tạo chuỗi thông tin chi tiết đã gửi để khách hàng kiểm tra
-        const totalAmount = renderReviewItems();
-        const cartItemsList = Object.keys(cart)
-          .map(
-            (item) =>
-              `${cart[item].category} - ${item} (x${cart[item].quantity})`
-          )
-          .join(" | ");
-
-        const submissionDetails =
-          `Tên: ${orderForm.name.value}\n` +
-          `SĐT: ${orderForm.phone.value}\n` +
-          `Địa chỉ: ${orderForm.address.value}\n` +
-          `Ghi chú: ${orderForm.note.value || "Không có"}\n\n` +
-          `Chi tiết đơn hàng:\n${cartItemsList.replace(/ \| /g, "\n")}`;
-
-        const successModal = document.createElement("div");
-        successModal.innerHTML = `
-            <div class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50">
-                <div class="bg-white p-6 rounded-xl w-full max-w-sm text-center shadow-2xl modal-content">
-                    <svg class="h-16 w-16 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h4 class="text-xl font-black mb-2 text-green-600">ĐẶT BÁNH THÀNH CÔNG!</h4>
-                    <p class="text-sm text-gray-700 mb-4">Lemon Patisserie sẽ liên hệ xác nhận đơn hàng của bạn trong thời gian sớm nhất.</p>
-                    <pre class="bg-gray-100 p-3 rounded-lg text-left text-xs overflow-x-auto">${submissionDetails.replace(
-                      /\n/g,
-                      "<br>"
-                    )}</pre>
-                    <button onclick="this.closest('.fixed').remove()" class="mt-4 px-6 py-2 lemon-bg rounded-full font-bold hover:bg-yellow-500 transition">
-                        Đóng
-                    </button>
+          items.forEach(item => {
+            const sanitizedName = item.name.replace(/\s/g, "");
+            
+            categoryHtml += `
+              <div class="product-card flex flex-col h-full" id="item-${sanitizedName}">
+                <!-- Vùng ảnh mô phỏng màu nước -->
+                <div class="img-wrapper" style="background: linear-gradient(to bottom, #ffffff, ${item.color}80);">
+                    <div class="text-6xl drop-shadow-md transform hover:scale-110 transition duration-300 cursor-default">${item.imgCode}</div>
+                    <div class="absolute top-3 right-3 bg-pink-500 text-white text-xs font-black px-2 py-1 rounded-full shadow-md">HOT</div>
                 </div>
-            </div>
-        `;
-        document.body.appendChild(successModal);
+                
+                <!-- Nội dung thông tin -->
+                <div class="p-5 flex flex-col flex-grow">
+                  <h4 class="text-xl font-bold text-gray-800 leading-tight">${item.name}</h4>
+                  <p class="text-sm text-gray-500 mt-1 mb-4 flex-grow">${item.desc}</p>
+                  
+                  <!-- Vùng giá và nút bấm -->
+                  <div class="flex items-center justify-between mt-auto">
+                    <span class="text-xl font-black text-[#0284c7]">${formatCurrency(DEFAULT_PRICE)}</span>
+                    
+                    <!-- Khối nút chọn (ẩn hiện dựa theo số lượng) -->
+                    <div class="flex items-center bg-gray-50 rounded-full border border-gray-200 p-1 shadow-inner h-10 w-28 justify-between" data-category="${category}">
+                        <button onclick="updateCart('${item.name}', -1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold btn-minus transition hover:bg-white text-lg leading-none">-</button>
+                        <span id="qty-${sanitizedName}" class="font-black text-gray-800 w-6 text-center">0</span>
+                        <button onclick="updateCart('${item.name}', 1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition hover:scale-105 btn-primary text-lg leading-none">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
 
-        // Reset
-        cart = {};
-        orderForm.reset();
-        renderMenu();
-        updateCartUI();
-        window.submitted = false; // Reset biến toàn cục
+          categoryHtml += `</div></section>`;
+          container.insertAdjacentHTML("beforeend", categoryHtml);
+        }
       }
 
-      /**
-       * Cập nhật giao diện giỏ hàng và thanh sticky footer.
-       */
+      // --- Logic Giỏ Hàng & Cập nhật UI ---
+      window.updateCart = function(itemName, change) {
+        if (!cart[itemName]) {
+            cart[itemName] = { quantity: 0, price: DEFAULT_PRICE };
+        }
+        
+        cart[itemName].quantity += change;
+        if (cart[itemName].quantity <= 0) {
+            delete cart[itemName];
+        }
+
+        const sanitizedName = itemName.replace(/\s/g, "");
+        const qtySpan = document.getElementById(`qty-${sanitizedName}`);
+        if(qtySpan) {
+            qtySpan.textContent = cart[itemName] ? cart[itemName].quantity : 0;
+        }
+
+        updateCartUI();
+      };
+
       function updateCartUI() {
         let totalItems = 0;
         let totalAmount = 0;
@@ -841,358 +392,130 @@
           totalAmount += cart[item].quantity * cart[item].price;
         }
 
-        cartItemCount.textContent = totalItems;
-        cartTotal.textContent = formatCurrency(totalAmount);
+        document.getElementById("cart-item-count").textContent = totalItems;
+        document.getElementById("cart-total").textContent = formatCurrency(totalAmount);
 
-        // Hiển thị/Ẩn thanh footer
+        const cartBar = document.getElementById("cart-summary");
         if (totalItems > 0) {
-          cartSummary.style.display = "block";
-          checkoutBtn.disabled = false;
+          cartBar.classList.remove("hidden");
+          setTimeout(() => cartBar.classList.remove("translate-y-full"), 10);
         } else {
-          cartSummary.style.display = "none";
-          checkoutBtn.disabled = true;
-        }
-
-        if (audio && totalItems > 0) {
-          audio.muted = false;
-          audio.play().catch((error) => {});
+          cartBar.classList.add("translate-y-full");
+          setTimeout(() => cartBar.classList.add("hidden"), 300);
         }
       }
 
-      /**
-       * Cập nhật UI của một card bánh cụ thể (FIX LỖI MENU JUMP)
-       */
-      function updateCakeCardUI(itemName) {
-        const sanitizedName = itemName.replace(/\s/g, "");
-        const cardElement = document.getElementById(`item-${sanitizedName}`);
-        if (!cardElement) return;
-
-        const currentQuantity = cart[itemName] ? cart[itemName].quantity : 0;
-        const button = cardElement.querySelector('[data-action="plus"]');
-        const minusButton = cardElement.querySelector('[data-action="minus"]');
-
-        if (button && minusButton) {
-          button.textContent =
-            currentQuantity > 0 ? `THÊM (+) (${currentQuantity})` : "CHỌN";
-          button.classList.toggle("bg-yellow-600", currentQuantity > 0);
-          button.classList.toggle("bg-yellow-400", currentQuantity === 0);
-
-          minusButton.disabled = currentQuantity === 0;
-          minusButton.classList.toggle("opacity-30", currentQuantity === 0);
-        }
-        updateCartUI();
-      }
-
-      /**
-       * Thêm/Bớt bánh khỏi giỏ hàng.
-       */
-      function updateCart(itemName, price, change, categoryName) {
-        if (!cart[itemName]) {
-          cart[itemName] = {
-            quantity: 0,
-            price: price,
-            category: categoryName,
-          };
-        }
-        cart[itemName].quantity += change;
-        if (cart[itemName].quantity <= 0) {
-          delete cart[itemName];
-        }
-        updateCakeCardUI(itemName);
-      }
-
-      /**
-       * Toggle hiển thị nội dung danh mục (Accordion)
-       */
-      function toggleCategory(event) {
-        const header = event.currentTarget;
-        const content = header.nextElementSibling;
-        const isExpanded = header.getAttribute("aria-expanded") === "true";
-
-        if (isExpanded) {
-          content.classList.add("hidden");
-          header.setAttribute("aria-expanded", "false");
-        } else {
-          content.classList.remove("hidden");
-          header.setAttribute("aria-expanded", "true");
-        }
-      }
-
-      /**
-       * Render Menu ra HTML
-       */
-      function renderMenu() {
-        menuContainer.innerHTML = "";
-        for (const category in menuData) {
-          const categoryItems = menuData[category];
-          const isFirstCategory = category === Object.keys(menuData)[0];
-          const contentClass = isFirstCategory ? "" : "hidden";
-          const expandedAttr = isFirstCategory ? "true" : "false";
-          const categoryId = category.replace(/\s/g, "-");
-
-          const categoryHtml = `
-            <section id="${categoryId}" class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                <div class="category-header p-4 flex justify-between items-center bg-yellow-100" aria-expanded="${expandedAttr}">
-                    <h3 class="text-xl font-black text-gray-800">${category}</h3>
-                    <svg class="h-5 w-5 text-gray-700 arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-                
-                <div class="category-content ${contentClass} p-4">
-                    <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 md:gap-6">
-                        ${categoryItems
-                          .map((item) => {
-                            const itemName = item.name;
-                            const sanitizedName = itemName.replace(/\s/g, "");
-                            const currentQuantity = cart[itemName]
-                              ? cart[itemName].quantity
-                              : 0;
-                            const buttonText =
-                              currentQuantity > 0
-                                ? `THÊM (+) (${currentQuantity})`
-                                : "CHỌN";
-                            const buttonClass =
-                              currentQuantity > 0
-                                ? "bg-yellow-600"
-                                : "bg-yellow-400";
-                            const minusDisabled =
-                              currentQuantity === 0 ? "disabled" : "";
-
-                            return `
-                              <div id="item-${sanitizedName}" class="cake-card bg-white rounded-xl shadow-md overflow-hidden flex flex-col items-center p-3 text-center border">
-                                <img 
-                                    src="${item.imageSrc}" 
-                                    alt="${itemName}" 
-                                    class="cake-img object-contain rounded-lg mb-2"
-                                    onerror="this.onerror=null; this.src='https://placehold.co/144x144/F9FBE7/78350F?text=Cake';"
-                                />
-                                <h4 class="text-md font-bold text-gray-900 line-clamp-2 min-h-[40px]">${itemName}</h4>
-                                <p class="text-sm font-extrabold text-red-500 my-1">${formatCurrency(
-                                  DEFAULT_PRICE
-                                )}</p>
-                                <div class="flex items-center space-x-2 mt-2 w-full" data-category="${category}"> 
-                                    <button 
-                                        data-item="${itemName}" 
-                                        data-price="${DEFAULT_PRICE}" 
-                                        data-action="minus"
-                                        class="text-red-500 font-bold p-1 rounded-full border border-red-500 w-1/4 hover:bg-red-100 transition disabled:opacity-30 ${minusDisabled}"
-                                        ${minusDisabled}
-                                    >
-                                        -
-                                    </button>
-                                    <button 
-                                        data-item="${itemName}" 
-                                        data-price="${DEFAULT_PRICE}" 
-                                        data-action="plus"
-                                        class="select-btn text-gray-900 font-bold py-1 rounded-full w-3/4 hover:bg-yellow-500 transition ${buttonClass}"
-                                    >
-                                        ${buttonText}
-                                    </button>
-                                </div>
-                              </div>
-                            `;
-                          })
-                          .join("")}
-                    </div>
-                </div>
-            </section>
-        `;
-          menuContainer.insertAdjacentHTML("beforeend", categoryHtml);
-        }
-
-        document.querySelectorAll(".category-header").forEach((header) => {
-          header.removeEventListener("click", toggleCategory);
-          header.addEventListener("click", toggleCategory);
-        });
-      }
-
-      /**
-       * Render chi tiết đơn hàng cho Review Modal
-       */
       function renderReviewItems() {
         let html = "";
         let totalAmount = 0;
+        const itemsDiv = document.getElementById("review-items");
 
-        const itemsInCart = Object.keys(cart);
-        if (itemsInCart.length === 0) {
-          html =
-            '<p class="text-gray-500 text-center py-4">Giỏ hàng trống. Vui lòng chọn bánh trước khi xác nhận!</p>';
-        } else {
-          itemsInCart.forEach((item) => {
+        if (Object.keys(cart).length === 0) {
+            itemsDiv.innerHTML = '<p class="text-center text-gray-500 py-4">Chưa có ly nước nào được chọn.</p>';
+            return 0;
+        }
+
+        for (const item in cart) {
             const data = cart[item];
             const subtotal = data.quantity * data.price;
             totalAmount += subtotal;
 
-            const displayItemName = data.category
-              ? `${data.category} - ${item}`
-              : item;
-
             html += `
-                      <div class="review-item border-b pb-2 pt-2">
-                          <span class="text-gray-700">${displayItemName}</span>
-                          <span class="review-quantity font-bold text-sm text-gray-800">x${
-                            data.quantity
-                          }</span>
-                          <span class="review-price text-sm font-semibold">${formatCurrency(
-                            data.price
-                          )}</span>
-                      </div>
-                  `;
-          });
+              <div class="flex justify-between items-center py-3 border-b border-gray-100 last:border-0">
+                  <div class="flex-1 pr-4">
+                      <p class="font-bold text-gray-800">${item}</p>
+                      <p class="text-sm text-gray-500">x${data.quantity}</p>
+                  </div>
+                  <div class="font-bold text-[#0284c7]">${formatCurrency(subtotal)}</div>
+              </div>
+            `;
         }
 
-        reviewItemsDiv.innerHTML = html;
-        reviewTotalSpan.textContent = formatCurrency(totalAmount);
+        itemsDiv.innerHTML = html;
+        document.getElementById("review-total").textContent = formatCurrency(totalAmount);
         return totalAmount;
       }
 
-      // ----------------- Modal Controls -----------------
-
-      function showModal(modalElement) {
-        modalElement.classList.remove("hidden");
-        setTimeout(() => {
-          modalElement.querySelector(".modal-content").style.transform =
-            "translateY(0)";
-        }, 10);
+      // --- Modal Transtions ---
+      function openModal(id) {
+          const modal = document.getElementById(id);
+          modal.classList.remove("hidden");
+          // Force reflow
+          void modal.offsetWidth;
+          modal.classList.remove("opacity-0");
+          modal.querySelector('.modal-content').classList.remove("translate-y-full", "md:translate-y-10");
       }
 
-      function hideModal(modalElement) {
-        modalElement.querySelector(".modal-content").style.transform =
-          "translateY(20px)";
-        setTimeout(() => {
-          modalElement.classList.add("hidden");
-        }, 300);
+      function closeModal(id) {
+          const modal = document.getElementById(id);
+          modal.classList.add("opacity-0");
+          modal.querySelector('.modal-content').classList.add("translate-y-full", "md:translate-y-10");
+          setTimeout(() => {
+              modal.classList.add("hidden");
+          }, 300);
       }
 
-      /**
-       * Xử lý submit form (Gán dữ liệu vào trường ẩn và kích hoạt form submit)
-       */
+      // --- Form Submittion ---
       window.handleFormSubmit = function () {
         const totalAmount = renderReviewItems();
-
-        // Tạo chuỗi chi tiết đơn hàng
         const cartItemsList = Object.keys(cart)
-          .map(
-            (item) =>
-              `${cart[item].category} - ${item} (x${cart[item].quantity})`
-          )
+          .map(item => `${item} (SL: ${cart[item].quantity})`)
           .join(" | ");
 
-        // Gán giá trị vào các trường ẩn
-        cartDetailsInput.value = cartItemsList;
-        totalAmountInput.value = formatCurrency(totalAmount);
+        // Gắn data vào Input ẩn gửi đi
+        document.getElementById("cart-details-input").value = cartItemsList;
+        document.getElementById("total-amount-input").value = formatCurrency(totalAmount);
 
-        // Đánh dấu đã submit và cho phép form gửi dữ liệu
         window.submitted = true;
-
-        // Form sẽ tự submit sau khi hàm này kết thúc
       };
 
-      // ----------------- Sidebar Controls (Không đổi) -----------------
-      const sidebarMenu = document.getElementById("sidebar-menu");
-      const sidebarOverlay = document.getElementById("sidebar-overlay");
-      const menuToggleBtn = document.getElementById("menu-toggle-btn");
+      window.showSubmissionSuccess = function() {
+        if (!window.submitted) return;
+        
+        closeModal("checkout-modal");
+        
+        const successModal = document.createElement("div");
+        successModal.innerHTML = `
+            <div class="fixed inset-0 bg-white z-[100] flex flex-col justify-center items-center p-6 text-center animate-pulse-once">
+                <div class="text-7xl mb-4">🎉🍹</div>
+                <h4 class="text-3xl font-bons text-[#0284c7] mb-2">Đặt Nước Thành Công!</h4>
+                <p class="text-gray-600 mb-8 font-bold">Bon's Tea đã nhận đơn và sẽ chuẩn bị ngay.</p>
+                <button onclick="location.reload()" class="btn-primary px-8 py-3 rounded-full font-bold uppercase shadow-lg">Về Menu Chính</button>
+            </div>
+        `;
+        document.body.appendChild(successModal);
+      };
 
-      function toggleSidebar() {
-        sidebarMenu.classList.toggle("active");
-        sidebarOverlay.classList.toggle("active");
-      }
-
-      sidebarOverlay.addEventListener("click", toggleSidebar);
-      menuToggleBtn.addEventListener("click", toggleSidebar);
-
-      document
-        .getElementById("sidebar-category-list")
-        .addEventListener("click", (e) => {
-          if (
-            e.target.tagName === "A" &&
-            e.target.getAttribute("href").startsWith("#")
-          ) {
-            e.preventDefault();
-            const targetId = e.target.getAttribute("href").substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: "smooth" });
-              const header = targetElement.querySelector(".category-header");
-              const content = targetElement.querySelector(".category-content");
-              if (header.getAttribute("aria-expanded") === "false") {
-                content.classList.remove("hidden");
-                header.setAttribute("aria-expanded", "true");
-              }
-            }
-            toggleSidebar();
-          }
-        });
-
-      // -------------------------------------------------------------------
-      // INITIALIZATION & EVENT LISTENERS
-      // -------------------------------------------------------------------
-
+      // --- Event Listeners Init ---
       document.addEventListener("DOMContentLoaded", () => {
-        window.toggleCategory = toggleCategory;
-        window.showSubmissionSuccess = showSubmissionSuccess; // Cần phải là hàm toàn cục
-
+        createBackgroundAnimation();
         renderMenu();
-        updateCartUI();
 
-        menuContainer.addEventListener("click", (event) => {
-          const btn = event.target.closest("button");
-          if (btn && btn.dataset.item && btn.dataset.action) {
-            handleMenuClick(event);
-          }
+        // Footer button -> Mở Review Modal
+        document.getElementById("checkout-btn").addEventListener("click", () => {
+            renderReviewItems();
+            openModal("review-modal");
         });
 
-        function handleMenuClick(event) {
-          const btn = event.target.closest("button");
-          if (!btn || (!btn.dataset.item && !btn.dataset.action)) return;
-
-          const itemName = btn.dataset.item;
-          const itemPrice = parseInt(btn.dataset.price);
-          const action = btn.dataset.action;
-
-          const controlsDiv = btn.closest("div[data-category]");
-          const categoryName = controlsDiv
-            ? controlsDiv.dataset.category
-            : "Khác";
-
-          if (action === "plus") {
-            updateCart(itemName, itemPrice, 1, categoryName);
-          } else if (action === "minus" && cart[itemName]) {
-            updateCart(itemName, itemPrice, -1, categoryName);
-          }
-        }
-
-        // Checkout Process Listeners (2 bước)
-        document
-          .getElementById("checkout-btn")
-          .addEventListener("click", () => {
-            if (Object.keys(cart).length > 0) {
-              renderReviewItems();
-              showModal(reviewModal); // BƯỚC 1
-            }
-          });
-
-        closeReviewModalBtn.addEventListener("click", () =>
-          hideModal(reviewModal)
-        );
-        confirmReviewBtn.addEventListener("click", () => {
-          // Chuyển từ Review Modal sang Checkout Modal
-          hideModal(reviewModal);
-          showModal(checkoutModal); // BƯỚC 2
+        // Nút Xác nhận từ Review -> Sang Form Điền thông tin
+        document.getElementById("confirm-review-btn").addEventListener("click", () => {
+            closeModal("review-modal");
+            setTimeout(() => { openModal("checkout-modal"); }, 300);
         });
 
-        closeCheckoutModalBtn.addEventListener(
-          "click",
-          () => showModal(reviewModal) // Quay lại BƯỚC 1
-        );
-
-        // Đóng modals khi click ra ngoài
-        reviewModal.addEventListener("click", (e) => {
-          if (e.target === reviewModal) hideModal(reviewModal);
+        // Nút tắt Modal
+        document.querySelectorAll('.close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modalId = this.closest('.fixed').id;
+                closeModal(modalId);
+            });
         });
-        checkoutModal.addEventListener("click", (e) => {
-          if (e.target === checkoutModal) hideModal(checkoutModal);
+
+        // Click bên ngoài Modal để đóng
+        document.querySelectorAll('.fixed.inset-0').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) { closeModal(this.id); }
+            });
         });
       });
     </script>
