@@ -1,37 +1,35 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bon's Tea | Fresh Fruit Tea Order</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts: Pacifico (cho logo/tiêu đề), Nunito (cho nội dung) -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Pacifico&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bons-blue: #22d3ee; /* Xanh ngọc mát */
-        --bons-blue-dark: #0284c7; /* Xanh biển sâu */
-        --bons-pink: #ff4d6d; /* Hồng chữ Bon's */
+        --bons-blue: #22d3ee; 
+        --bons-blue-dark: #0284c7; 
+        --bons-pink: #ff4d6d; 
         --bons-yellow: #fde047;
       }
       body {
         font-family: "Nunito", sans-serif;
         background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #e0f2fe 0%, #38bdf8 100%);
         background-attachment: fixed;
-        padding-bottom: 120px; /* Tăng khoảng trống để không bị che bởi giỏ hàng */
+        padding-bottom: 120px; 
         color: #1e293b;
       }
       .font-bons {
         font-family: "Pacifico", cursive;
       }
       
-      /* Hiệu ứng Text Logo giống ảnh */
       .text-glow {
         text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
       }
 
-      /* Card Sản Phẩm */
       .product-card {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 1.5rem;
@@ -45,9 +43,8 @@
         box-shadow: 0 20px 30px rgba(2, 132, 199, 0.25);
       }
 
-      /* Hình ảnh đồ uống (mô phỏng) */
       .img-wrapper {
-        height: 180px; /* Thu gọn một chút trên mobile để cân đối hơn */
+        height: 180px; 
         width: 100%;
         display: flex;
         align-items: center;
@@ -57,11 +54,8 @@
         position: relative;
       }
       @media (min-width: 768px) {
-        .img-wrapper {
-          height: 200px; /* Trả về 200px trên tablet/desktop */
-        }
+        .img-wrapper { height: 200px; }
       }
-      /* Nước trái cây văng lên (trang trí viền ảnh) */
       .img-wrapper::after {
         content: "";
         position: absolute;
@@ -74,7 +68,6 @@
         border-top-right-radius: 50%;
       }
 
-      /* Buttons */
       .btn-primary {
         background: linear-gradient(to right, var(--bons-blue-dark), var(--bons-blue));
         color: white;
@@ -93,7 +86,6 @@
         color: var(--bons-pink);
       }
 
-      /* Background Animation (Trái cây rơi) */
       .bg-animated-item {
         position: fixed;
         top: -10%;
@@ -109,14 +101,26 @@
         100% { transform: translateY(110vh) rotate(360deg); }
       }
 
-      /* Custom Scrollbar cho Modal */
       .custom-scroll::-webkit-scrollbar { width: 6px; }
       .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
       .custom-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+
+      /* Language Toggle Styles */
+      .lang-btn {
+        transition: all 0.3s;
+        opacity: 0.5;
+        filter: grayscale(100%);
+      }
+      .lang-btn.active {
+        opacity: 1;
+        filter: grayscale(0%);
+        transform: scale(1.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
     </style>
   </head>
   <body>
-    <!-- BACKGROUND ANIMATION: Sinh ra bằng JS -->
+    <!-- BACKGROUND ANIMATION -->
     <div id="background-animation-container"></div>
 
     <!-- HEADER -->
@@ -130,49 +134,53 @@
           </h1>
         </div>
 
-        <!-- Contact Info -->
-        <div class="text-right bg-white/90 px-3 py-1 md:px-4 md:py-1.5 rounded-full shadow-sm border border-blue-100">
-            <p class="text-[9px] md:text-[10px] font-black text-gray-400 tracking-wider">ORDER NOW</p>
-            <p class="text-blue-600 font-black text-xs md:text-sm">0936 558 097</p>
+        <!-- Language & Contact Info -->
+        <div class="flex items-center space-x-3">
+            <!-- Language Toggle (Flags) -->
+            <div class="flex bg-gray-100 p-1 rounded-full space-x-1">
+                <button onclick="setLang('en')" id="btn-lang-en" class="lang-btn active w-8 h-8 rounded-full flex items-center justify-center bg-white text-lg" title="English">🇬🇧</button>
+                <button onclick="setLang('ru')" id="btn-lang-ru" class="lang-btn w-8 h-8 rounded-full flex items-center justify-center bg-white text-lg" title="Русский">🇷🇺</button>
+            </div>
+            
+            <div class="text-right bg-white/90 px-3 py-1 md:px-4 md:py-1.5 rounded-full shadow-sm border border-blue-100">
+                <p class="text-[9px] md:text-[10px] font-black text-gray-400 tracking-wider" data-i18n="orderNow">ORDER NOW</p>
+                <p class="text-blue-600 font-black text-xs md:text-sm">0936 558 097</p>
+            </div>
         </div>
       </div>
     </header>
 
-    <!-- BANNER HERO (Bám sát thiết kế text trên ảnh) -->
+    <!-- BANNER HERO -->
     <div class="max-w-4xl mx-auto px-4 mt-4 md:mt-6 mb-6 md:mb-8 relative z-10 text-center">
-        <h2 class="text-4xl md:text-6xl text-white font-bons mb-2 rotate-[-3deg] drop-shadow-md">Fresh Fruit Tea!</h2>
+        <h2 class="text-4xl md:text-6xl text-white font-bons mb-2 rotate-[-3deg] drop-shadow-md" data-i18n="heroTitle">Fresh Fruit Tea!</h2>
         <div class="inline-block bg-white/90 backdrop-blur px-4 py-1.5 md:px-6 md:py-2 rounded-full shadow-lg border-2 border-white transform rotate-[2deg] mt-2 md:mt-4">
-            <span class="text-lg md:text-xl font-black text-[#0284c7]">All flavors only</span> 
-            <span class="text-xl md:text-2xl font-black text-pink-500 ml-1">$45K!</span>
+            <span class="text-lg md:text-xl font-black text-[#0284c7]" data-i18n="heroSubtitle">All flavors only</span> 
+            <span class="text-xl md:text-2xl font-black text-pink-500 ml-1">45K VND</span>
         </div>
         <br>
-        <p class="mt-3 text-white font-bold text-xs md:text-sm bg-black/20 inline-block px-4 py-1 rounded-full backdrop-blur-sm">Limited Time Offer</p>
+        <p class="mt-3 text-white font-bold text-xs md:text-sm bg-black/20 inline-block px-4 py-1 rounded-full backdrop-blur-sm" data-i18n="limitedOffer">Limited Time Offer</p>
     </div>
 
     <!-- MAIN MENU CONTENT -->
     <main class="max-w-4xl mx-auto px-4 relative z-10">
-      <!-- Vùng chứa danh sách sản phẩm -->
       <div id="menu-container" class="space-y-8 md:space-y-10">
-        <!-- JS sẽ render HTML vào đây -->
+        <!-- Rendered by JS -->
       </div>
     </main>
 
-    <!-- FOOTER THÔNG TIN -->
+    <!-- FOOTER -->
     <footer class="max-w-4xl mx-auto px-4 mt-10 mb-8 relative z-10 text-center text-gray-700">
       <div class="bg-white/60 backdrop-blur-md rounded-3xl p-6 shadow-sm border border-white/60">
         <h4 class="font-bons text-2xl text-[#0284c7] mb-3">Bon's Tea</h4>
         <div class="space-y-1 text-sm font-semibold">
-          <p>📍 Địa chỉ: 123 Đường Giải Khát, Quận 1, TP. HCM</p>
-          <p>📞 Zalo / Hotline: 0936 558 097</p>
-          <p>⏰ Mở cửa: 08:00 - 22:00 hằng ngày</p>
-        </div>
-        <div class="mt-4 pt-4 border-t border-gray-300/50 text-xs text-gray-500">
-          &copy; 2026 Bon's Tea. All rights reserved.
+          <p data-i18n="footerAddr">📍 Address: 123 Giải Khát St, D1, HCMC</p>
+          <p>📞 Zalo / WhatsApp: 0936 558 097</p>
+          <p data-i18n="footerTime">⏰ Open: 08:00 - 22:00 daily</p>
         </div>
       </div>
     </footer>
 
-    <!-- STICKY FOOTER (GIỎ HÀNG) -->
+    <!-- STICKY FOOTER (CART) -->
     <div id="cart-summary" class="fixed bottom-0 left-0 w-full bg-white z-40 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] hidden rounded-t-3xl transition-transform duration-300 transform translate-y-full">
       <div class="max-w-4xl mx-auto p-3 md:p-4 flex justify-between items-center">
         <div class="flex items-center space-x-2 md:space-x-3">
@@ -183,72 +191,69 @@
               <span id="cart-item-count" class="absolute -top-1 -right-1 bg-pink-500 text-white w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full text-[10px] md:text-xs font-bold border-2 border-white">0</span>
           </div>
           <div>
-              <p class="text-[10px] md:text-xs font-bold text-gray-500">Tạm tính</p>
-              <p id="cart-total" class="font-black text-lg md:text-xl text-[#0284c7]">0 đ</p>
+              <p class="text-[10px] md:text-xs font-bold text-gray-500" data-i18n="cartSubtotal">Subtotal</p>
+              <p id="cart-total" class="font-black text-lg md:text-xl text-[#0284c7]">0</p>
           </div>
         </div>
         <button id="checkout-btn" class="btn-primary py-2.5 px-6 md:py-3 md:px-8 rounded-full font-bold uppercase tracking-wide text-sm md:text-base">
-          Tiếp tục 🚀
+          <span data-i18n="btnContinue">Continue</span> 🚀
         </button>
       </div>
     </div>
 
-    <!-- MODAL 1: REVIEW ĐƠN HÀNG -->
+    <!-- MODAL 1: REVIEW -->
     <div id="review-modal" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end md:items-center hidden opacity-0 transition-opacity duration-300">
       <div class="bg-white p-6 rounded-t-3xl md:rounded-3xl w-full max-w-lg shadow-2xl transform translate-y-full md:translate-y-10 transition-transform duration-300 modal-content">
         <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
-            <h3 class="text-2xl font-black text-gray-800 font-bons tracking-wide">Giỏ Hàng Của Bạn</h3>
+            <h3 class="text-2xl font-black text-gray-800 font-bons tracking-wide" data-i18n="cartTitle">Your Cart</h3>
             <button class="close-modal-btn text-gray-400 hover:text-red-500 bg-gray-100 p-2 rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
         
-        <div id="review-items" class="space-y-3 max-h-[40vh] overflow-y-auto custom-scroll pr-2 mb-4">
-          <!-- Chi tiết đơn hàng -->
-        </div>
+        <div id="review-items" class="space-y-3 max-h-[40vh] overflow-y-auto custom-scroll pr-2 mb-4"></div>
         
         <div class="bg-blue-50 p-4 rounded-2xl mb-4 flex justify-between items-center">
-            <span class="font-bold text-blue-900">Tổng cộng:</span>
-            <span id="review-total" class="text-2xl font-black text-pink-500">0 đ</span>
+            <span class="font-bold text-blue-900" data-i18n="cartTotal">Total:</span>
+            <span id="review-total" class="text-2xl font-black text-pink-500">0</span>
         </div>
 
-        <button id="confirm-review-btn" class="w-full btn-primary py-4 rounded-xl font-bold uppercase text-lg shadow-lg">
-            Xác Nhận Đặt Nước
+        <button id="confirm-review-btn" class="w-full btn-primary py-4 rounded-xl font-bold uppercase text-lg shadow-lg" data-i18n="btnConfirm">
+            Confirm Order
         </button>
       </div>
     </div>
 
-    <!-- MODAL 2: THÔNG TIN GIAO HÀNG (GIỮ NGUYÊN FORM GỐC) -->
+    <!-- MODAL 2: CHECKOUT FORM (Đã cập nhật Action URL và các Entry ID mới) -->
     <div id="checkout-modal" class="fixed inset-0 bg-black/60 z-50 flex justify-center items-end md:items-center hidden opacity-0 transition-opacity duration-300">
       <div class="bg-white p-6 rounded-t-3xl md:rounded-3xl w-full max-w-lg shadow-2xl transform translate-y-full md:translate-y-10 transition-transform duration-300 modal-content">
         <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-            <h3 class="text-xl font-black text-gray-800">🛵 Thông Tin Nhận Hàng</h3>
+            <h3 class="text-xl font-black text-gray-800" data-i18n="formTitle">🛵 Delivery Info</h3>
             <button class="close-modal-btn text-gray-400 hover:text-red-500 bg-gray-100 p-2 rounded-full"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
 
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSeRE1L4khNvvBefgmuGiMlMPkUAIqhjatBvZgR79TYGR3DUIQ/viewform" method="POST" target="hidden_iframe" id="order-form" onsubmit="handleFormSubmit();" class="space-y-3 custom-scroll max-h-[60vh] overflow-y-auto pr-2 pb-2">
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSd2obDIxpqNsD-DI6Y7U95y7b5kYeHUiCe3egKDAZEqFGpe5g/formResponse" method="POST" target="hidden_iframe" id="order-form" onsubmit="handleFormSubmit();" class="space-y-3 custom-scroll max-h-[60vh] overflow-y-auto pr-2 pb-2">
           
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Tên của bạn <span class="text-red-500">*</span></label>
-            <input type="text" name="entry.1619499376" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
+            <label class="block text-sm font-bold text-gray-700 mb-1"><span data-i18n="lblName">Your Name</span> <span class="text-red-500">*</span></label>
+            <input type="text" name="entry.1584277093" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
-            <input type="tel" name="entry.371112576" required pattern="[0-9]{9,12}" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
+            <label class="block text-sm font-bold text-gray-700 mb-1"><span data-i18n="lblPhone">Phone Number / WhatsApp</span> <span class="text-red-500">*</span></label>
+            <input type="text" name="entry.1910847976" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Địa chỉ nhận (Quận/Đường/Số nhà) <span class="text-red-500">*</span></label>
-            <input type="text" name="entry.1438297676" required placeholder="Nhập địa chỉ chi tiết" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
+            <label class="block text-sm font-bold text-gray-700 mb-1"><span data-i18n="lblAddress">Address (Hotel name / Room)</span> <span class="text-red-500">*</span></label>
+            <input type="text" name="entry.75177064" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition" />
           </div>
           <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">Ghi chú thêm (Đá/Đường/Trân châu...)</label>
-            <textarea name="entry.1656248315" rows="2" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition"></textarea>
+            <label class="block text-sm font-bold text-gray-700 mb-1" data-i18n="lblNote">Notes (Ice/Sugar/Pearls...)</label>
+            <textarea name="entry.529463192" rows="2" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition"></textarea>
           </div>
 
-          <!-- Các trường ẩn chứa data giỏ hàng (Ánh xạ chuẩn từ code gốc) -->
-          <input type="hidden" id="cart-details-input" name="entry.344338516" value="" />
-          <input type="hidden" id="total-amount-input" name="entry.1950152427" value="" />
+          <input type="hidden" id="cart-details-input" name="entry.1598342996" value="" />
+          <input type="hidden" id="total-amount-input" name="entry.287285291" value="" />
 
-          <button type="submit" class="w-full btn-primary py-4 mt-2 rounded-xl font-bold uppercase tracking-wide text-lg">
-            Hoàn tất đặt đơn 🍹
+          <button type="submit" class="w-full btn-primary py-4 mt-2 rounded-xl font-bold uppercase tracking-wide text-lg" data-i18n="btnSubmit">
+            Complete Order 🍹
           </button>
         </form>
       </div>
@@ -260,124 +265,180 @@
     <script>
       let submitted = false;
       const DEFAULT_PRICE = 45000;
-      let cart = {}; 
+      let cart = {}; // Cấu trúc mới: { "p1": { quantity: 1, price: 45000 } }
+      let currentLang = 'en';
 
-      // Dữ liệu sản phẩm bám sát Flyer
-      const menuData = {
-        "Menu Trà Trái Cây Tươi": [
-          { 
-              name: "Pineapple Mint", 
-              desc: "Dứa tươi dầm, chanh & lá bạc hà thanh mát.", 
-              color: "#fde047", // Vàng dứa
-              imgCode: "🍍🍃"
+      // --- BỘ TỪ ĐIỂN ĐA NGÔN NGỮ (I18N) ---
+      const translations = {
+          en: {
+              orderNow: "ORDER NOW",
+              heroTitle: "Fresh Fruit Tea!",
+              heroSubtitle: "All flavors only",
+              limitedOffer: "Limited Time Offer",
+              menuTitle: "Fresh Fruit Tea Menu",
+              cartSubtotal: "Subtotal",
+              btnContinue: "Continue",
+              cartTitle: "Your Cart",
+              cartTotal: "Total:",
+              btnConfirm: "Confirm Order",
+              formTitle: "🛵 Delivery Info",
+              lblName: "Your Name",
+              lblPhone: "Phone Number / WhatsApp",
+              lblAddress: "Address (Hotel name / Room number)",
+              lblNote: "Notes (Ice/Sugar...)",
+              btnSubmit: "Complete Order 🍹",
+              emptyCart: "No items selected.",
+              successTitle: "Order Successful!",
+              successDesc: "Bon's Tea has received your order and will prepare it right away.",
+              btnBack: "Back to Menu",
+              footerAddr: "📍 Address: 123 Giai Khat St, D1, HCMC",
+              footerTime: "⏰ Open: 08:00 - 22:00 daily"
           },
-          { 
-              name: "Passion Orange Lime", 
-              desc: "Sự kết hợp bùng nổ của Cam vàng Úc, Chanh dây & Tắc.", 
-              color: "#f97316", // Cam
-              imgCode: "🍊🍋"
-          },
-          { 
-              name: "Watermelon Lime", 
-              desc: "Dưa hấu đỏ mọng nước giải nhiệt cùng chanh tươi.", 
-              color: "#fb7185", // Đỏ hồng dưa hấu
-              imgCode: "🍉🍋"
+          ru: {
+              orderNow: "ЗАКАЗАТЬ",
+              heroTitle: "Свежий Фруктовый Чай!",
+              heroSubtitle: "Все вкусы всего",
+              limitedOffer: "Ограниченное предложение",
+              menuTitle: "Меню Фруктового Чая",
+              cartSubtotal: "Итого",
+              btnContinue: "Далее",
+              cartTitle: "Ваша Корзина",
+              cartTotal: "Сумма:",
+              btnConfirm: "Подтвердить заказ",
+              formTitle: "🛵 Информация о доставке",
+              lblName: "Ваше Имя",
+              lblPhone: "Телефон / WhatsApp",
+              lblAddress: "Адрес (Название отеля / Номер комнаты)",
+              lblNote: "Примечания (Лед/Сахар...)",
+              btnSubmit: "Завершить заказ 🍹",
+              emptyCart: "Товары не выбраны.",
+              successTitle: "Заказ успешен!",
+              successDesc: "Bon's Tea получил ваш заказ и скоро его приготовит.",
+              btnBack: "Вернуться в меню",
+              footerAddr: "📍 Адрес: 123 Giai Khat St, D1, Хошимин",
+              footerTime: "⏰ Открыто: 08:00 - 22:00"
           }
-        ],
-        "Menu Thảo Mộc (Gợi ý)": [
-          { name: "Trà Đào Cam Sả", desc: "Đào miếng giòn rụm, hương sả thơm nồng.", color: "#fcd34d", imgCode: "🍑🌿" },
-          { name: "Trà Vải Lài", desc: "Vải thiều ngọt lịm kết hợp hoa lài thơm dịu.", color: "#fbcfe8", imgCode: "🌸🍒" }
-        ]
       };
 
-      // --- Logic Khởi Tạo Hoạt Ảnh ---
-      function createBackgroundAnimation() {
-        const container = document.getElementById('background-animation-container');
-        const fruits = ['🍋', '🍉', '🍃', '🍊', '🧊'];
-        for(let i = 0; i < 20; i++) {
-            let item = document.createElement('div');
-            item.className = 'bg-animated-item';
-            item.innerText = fruits[Math.floor(Math.random() * fruits.length)];
-            item.style.left = `${Math.random() * 100}%`;
-            item.style.animationDuration = `${Math.random() * 10 + 10}s`;
-            item.style.animationDelay = `${Math.random() * 5}s`;
-            item.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
-            container.appendChild(item);
-        }
-      }
+      // --- DỮ LIỆU SẢN PHẨM THEO YÊU CẦU ---
+      const products = [
+          {
+              id: "p1",
+              color: "#fde047", imgCode: "🍍🍃",
+              name: { en: "Pineapple Mint Tea", ru: "Ананасово-Мятный Чай" },
+              desc: { 
+                  en: "Fresh pineapple + mint + pandan tea.<br><span class='text-pink-500'>👉 Super fresh & cooling</span>", 
+                  ru: "Свежий ананас + мята + чай пандан.<br><span class='text-pink-500'>👉 Супер свежий и охлаждающий</span>" 
+              }
+          },
+          {
+              id: "p2",
+              color: "#f97316", imgCode: "🍊🍋",
+              name: { en: "Passion Orange Tea", ru: "Маракуйя Апельсин" },
+              desc: { 
+                  en: "Passion fruit + orange + tea.<br><span class='text-pink-500'>👉 Sweet & sour – most popular</span>", 
+                  ru: "Маракуйя + апельсин + чай.<br><span class='text-pink-500'>👉 Кисло-сладкий – самый популярный</span>" 
+              }
+          },
+          {
+              id: "p3",
+              color: "#fb7185", imgCode: "🍉🍋",
+              name: { en: "Watermelon Lime Tea", ru: "Арбузный Лайм Чай" },
+              desc: { 
+                  en: "Fresh watermelon + lime + tea.<br><span class='text-pink-500'>👉 Light & refreshing</span>", 
+                  ru: "Свежий арбуз + лайм + чай.<br><span class='text-pink-500'>👉 Легкий и освежающий</span>" 
+              }
+          }
+      ];
 
-      // --- Logic Tiền Tệ ---
+      // --- QUẢN LÝ NGÔN NGỮ ---
+      window.setLang = function(lang) {
+          currentLang = lang;
+          
+          // Đổi style nút
+          document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+          document.getElementById(`btn-lang-${lang}`).classList.add('active');
+
+          // Dịch các text tĩnh (data-i18n)
+          document.querySelectorAll('[data-i18n]').forEach(el => {
+              const key = el.getAttribute('data-i18n');
+              if (translations[lang][key]) {
+                  el.innerHTML = translations[lang][key];
+              }
+          });
+
+          // Render lại Menu và Giỏ hàng bằng ngôn ngữ mới
+          renderMenu();
+          updateCartUI();
+          if(!document.getElementById('review-modal').classList.contains('hidden')) {
+              renderReviewItems();
+          }
+      };
+
+      // --- Logic Tiền Tệ (Chuyển sang format VND quốc tế) ---
       function formatCurrency(number) {
-        return number.toLocaleString("vi-VN") + " đ";
+        return number.toLocaleString("en-US") + " VND";
       }
 
-      // --- Logic Render UI Menu ---
+      // --- Render UI Menu ---
       function renderMenu() {
         const container = document.getElementById("menu-container");
-        container.innerHTML = "";
-
-        for (const category in menuData) {
-          const items = menuData[category];
-          let categoryHtml = `
+        container.innerHTML = `
             <section class="mb-8">
               <h3 class="text-2xl font-black text-[#0284c7] mb-4 bg-white/70 backdrop-blur-sm inline-block px-4 py-2 rounded-2xl shadow-sm border border-white">
-                ${category}
+                ${translations[currentLang].menuTitle}
               </h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          `;
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="product-grid">
+              </div>
+            </section>
+        `;
+        
+        const grid = document.getElementById("product-grid");
 
-          items.forEach(item => {
-            const sanitizedName = item.name.replace(/\s/g, "");
-            
-            categoryHtml += `
-              <div class="product-card flex flex-col h-full" id="item-${sanitizedName}">
-                <!-- Vùng ảnh mô phỏng màu nước -->
-                <div class="img-wrapper" style="background: linear-gradient(to bottom, #ffffff, ${item.color}80);">
-                    <div class="text-6xl drop-shadow-md transform hover:scale-110 transition duration-300 cursor-default">${item.imgCode}</div>
-                    <div class="absolute top-3 right-3 bg-pink-500 text-white text-xs font-black px-2 py-1 rounded-full shadow-md">HOT</div>
-                </div>
+        products.forEach(item => {
+          const qty = cart[item.id] ? cart[item.id].quantity : 0;
+          
+          const cardHtml = `
+            <div class="product-card flex flex-col h-full" id="item-${item.id}">
+              <div class="img-wrapper" style="background: linear-gradient(to bottom, #ffffff, ${item.color}80);">
+                  <div class="text-6xl drop-shadow-md transform hover:scale-110 transition duration-300 cursor-default">${item.imgCode}</div>
+                  <div class="absolute top-3 right-3 bg-pink-500 text-white text-xs font-black px-2 py-1 rounded-full shadow-md">HOT</div>
+              </div>
+              
+              <div class="p-5 flex flex-col flex-grow">
+                <h4 class="text-xl font-bold text-gray-800 leading-tight">${item.name[currentLang]}</h4>
+                <p class="text-sm text-gray-500 mt-2 mb-4 flex-grow leading-relaxed">${item.desc[currentLang]}</p>
                 
-                <!-- Nội dung thông tin -->
-                <div class="p-5 flex flex-col flex-grow">
-                  <h4 class="text-xl font-bold text-gray-800 leading-tight">${item.name}</h4>
-                  <p class="text-sm text-gray-500 mt-1 mb-4 flex-grow">${item.desc}</p>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
+                  <span class="text-xl font-black text-[#0284c7]">${formatCurrency(DEFAULT_PRICE)}</span>
                   
-                  <!-- Vùng giá và nút bấm -->
-                  <div class="flex items-center justify-between mt-auto">
-                    <span class="text-xl font-black text-[#0284c7]">${formatCurrency(DEFAULT_PRICE)}</span>
-                    
-                    <!-- Khối nút chọn (ẩn hiện dựa theo số lượng) -->
-                    <div class="flex items-center bg-gray-50 rounded-full border border-gray-200 p-1 shadow-inner h-10 w-28 justify-between" data-category="${category}">
-                        <button onclick="updateCart('${item.name}', -1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold btn-minus transition hover:bg-white text-lg leading-none">-</button>
-                        <span id="qty-${sanitizedName}" class="font-black text-gray-800 w-6 text-center">0</span>
-                        <button onclick="updateCart('${item.name}', 1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition hover:scale-105 btn-primary text-lg leading-none">+</button>
-                    </div>
+                  <div class="flex items-center bg-gray-50 rounded-full border border-gray-200 p-1 shadow-inner h-10 w-28 justify-between">
+                      <button onclick="updateCart('${item.id}', -1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold btn-minus transition hover:bg-white text-lg leading-none">-</button>
+                      <span id="qty-${item.id}" class="font-black text-gray-800 w-6 text-center">${qty}</span>
+                      <button onclick="updateCart('${item.id}', 1)" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition hover:scale-105 btn-primary text-lg leading-none">+</button>
                   </div>
                 </div>
               </div>
-            `;
-          });
-
-          categoryHtml += `</div></section>`;
-          container.insertAdjacentHTML("beforeend", categoryHtml);
-        }
+            </div>
+          `;
+          grid.insertAdjacentHTML("beforeend", cardHtml);
+        });
       }
 
-      // --- Logic Giỏ Hàng & Cập nhật UI ---
-      window.updateCart = function(itemName, change) {
-        if (!cart[itemName]) {
-            cart[itemName] = { quantity: 0, price: DEFAULT_PRICE };
+      // --- Logic Giỏ Hàng (Dùng ID để lưu data đa ngôn ngữ) ---
+      window.updateCart = function(itemId, change) {
+        if (!cart[itemId]) {
+            cart[itemId] = { quantity: 0, price: DEFAULT_PRICE };
         }
         
-        cart[itemName].quantity += change;
-        if (cart[itemName].quantity <= 0) {
-            delete cart[itemName];
+        cart[itemId].quantity += change;
+        if (cart[itemId].quantity <= 0) {
+            delete cart[itemId];
         }
 
-        const sanitizedName = itemName.replace(/\s/g, "");
-        const qtySpan = document.getElementById(`qty-${sanitizedName}`);
+        const qtySpan = document.getElementById(`qty-${itemId}`);
         if(qtySpan) {
-            qtySpan.textContent = cart[itemName] ? cart[itemName].quantity : 0;
+            qtySpan.textContent = cart[itemId] ? cart[itemId].quantity : 0;
         }
 
         updateCartUI();
@@ -387,9 +448,9 @@
         let totalItems = 0;
         let totalAmount = 0;
 
-        for (const item in cart) {
-          totalItems += cart[item].quantity;
-          totalAmount += cart[item].quantity * cart[item].price;
+        for (const id in cart) {
+          totalItems += cart[id].quantity;
+          totalAmount += cart[id].quantity * cart[id].price;
         }
 
         document.getElementById("cart-item-count").textContent = totalItems;
@@ -411,19 +472,20 @@
         const itemsDiv = document.getElementById("review-items");
 
         if (Object.keys(cart).length === 0) {
-            itemsDiv.innerHTML = '<p class="text-center text-gray-500 py-4">Chưa có ly nước nào được chọn.</p>';
+            itemsDiv.innerHTML = `<p class="text-center text-gray-500 py-4">${translations[currentLang].emptyCart}</p>`;
             return 0;
         }
 
-        for (const item in cart) {
-            const data = cart[item];
+        for (const id in cart) {
+            const data = cart[id];
+            const product = products.find(p => p.id === id);
             const subtotal = data.quantity * data.price;
             totalAmount += subtotal;
 
             html += `
               <div class="flex justify-between items-center py-3 border-b border-gray-100 last:border-0">
                   <div class="flex-1 pr-4">
-                      <p class="font-bold text-gray-800">${item}</p>
+                      <p class="font-bold text-gray-800">${product.name[currentLang]}</p>
                       <p class="text-sm text-gray-500">x${data.quantity}</p>
                   </div>
                   <div class="font-bold text-[#0284c7]">${formatCurrency(subtotal)}</div>
@@ -436,11 +498,26 @@
         return totalAmount;
       }
 
-      // --- Modal Transtions ---
+      // --- Hoạt Ảnh Trái Cây Rơi ---
+      function createBackgroundAnimation() {
+        const container = document.getElementById('background-animation-container');
+        const fruits = ['🍋', '🍉', '🍃', '🍊', '🧊'];
+        for(let i = 0; i < 20; i++) {
+            let item = document.createElement('div');
+            item.className = 'bg-animated-item';
+            item.innerText = fruits[Math.floor(Math.random() * fruits.length)];
+            item.style.left = `${Math.random() * 100}%`;
+            item.style.animationDuration = `${Math.random() * 10 + 10}s`;
+            item.style.animationDelay = `${Math.random() * 5}s`;
+            item.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+            container.appendChild(item);
+        }
+      }
+
+      // --- Điều hướng Modal ---
       function openModal(id) {
           const modal = document.getElementById(id);
           modal.classList.remove("hidden");
-          // Force reflow
           void modal.offsetWidth;
           modal.classList.remove("opacity-0");
           modal.querySelector('.modal-content').classList.remove("translate-y-full", "md:translate-y-10");
@@ -455,63 +532,58 @@
           }, 300);
       }
 
-      // --- Form Submittion ---
+      // --- Xử lý Gửi Form ---
       window.handleFormSubmit = function () {
         const totalAmount = renderReviewItems();
-        const cartItemsList = Object.keys(cart)
-          .map(item => `${item} (SL: ${cart[item].quantity})`)
-          .join(" | ");
+        
+        // Luôn gửi TÊN TIẾNG ANH về Form để chủ quán dễ quản lý
+        const cartItemsList = Object.keys(cart).map(id => {
+            const product = products.find(p => p.id === id);
+            return `${product.name['en']} (Qty: ${cart[id].quantity})`;
+        }).join(" | ");
 
-        // Gắn data vào Input ẩn gửi đi
         document.getElementById("cart-details-input").value = cartItemsList;
         document.getElementById("total-amount-input").value = formatCurrency(totalAmount);
-
         window.submitted = true;
       };
 
       window.showSubmissionSuccess = function() {
         if (!window.submitted) return;
-        
         closeModal("checkout-modal");
         
         const successModal = document.createElement("div");
         successModal.innerHTML = `
             <div class="fixed inset-0 bg-white z-[100] flex flex-col justify-center items-center p-6 text-center animate-pulse-once">
                 <div class="text-7xl mb-4">🎉🍹</div>
-                <h4 class="text-3xl font-bons text-[#0284c7] mb-2">Đặt Nước Thành Công!</h4>
-                <p class="text-gray-600 mb-8 font-bold">Bon's Tea đã nhận đơn và sẽ chuẩn bị ngay.</p>
-                <button onclick="location.reload()" class="btn-primary px-8 py-3 rounded-full font-bold uppercase shadow-lg">Về Menu Chính</button>
+                <h4 class="text-3xl font-bons text-[#0284c7] mb-2">${translations[currentLang].successTitle}</h4>
+                <p class="text-gray-600 mb-8 font-bold">${translations[currentLang].successDesc}</p>
+                <button onclick="location.reload()" class="btn-primary px-8 py-3 rounded-full font-bold uppercase shadow-lg">${translations[currentLang].btnBack}</button>
             </div>
         `;
         document.body.appendChild(successModal);
       };
 
-      // --- Event Listeners Init ---
+      // --- Khởi tạo ---
       document.addEventListener("DOMContentLoaded", () => {
         createBackgroundAnimation();
-        renderMenu();
+        setLang('en'); // Mặc định hiển thị tiếng Anh
 
-        // Footer button -> Mở Review Modal
         document.getElementById("checkout-btn").addEventListener("click", () => {
             renderReviewItems();
             openModal("review-modal");
         });
 
-        // Nút Xác nhận từ Review -> Sang Form Điền thông tin
         document.getElementById("confirm-review-btn").addEventListener("click", () => {
             closeModal("review-modal");
             setTimeout(() => { openModal("checkout-modal"); }, 300);
         });
 
-        // Nút tắt Modal
         document.querySelectorAll('.close-modal-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const modalId = this.closest('.fixed').id;
-                closeModal(modalId);
+                closeModal(this.closest('.fixed').id);
             });
         });
 
-        // Click bên ngoài Modal để đóng
         document.querySelectorAll('.fixed.inset-0').forEach(modal => {
             modal.addEventListener('click', function(e) {
                 if (e.target === this) { closeModal(this.id); }
